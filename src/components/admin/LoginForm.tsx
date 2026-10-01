@@ -19,11 +19,10 @@ function SubmitButton() {
   )
 }
 
-const floatingLabelCls =
-  "pointer-events-none absolute left-10 top-1/2 -translate-y-1/2 text-sm text-navy-400 transition-all duration-200 " +
-  "peer-focus:left-0 peer-focus:-top-3 peer-focus:translate-y-0 peer-focus:text-xs peer-focus:font-medium peer-focus:text-navy-700 " +
-  "peer-[:not(:placeholder-shown)]:left-0 peer-[:not(:placeholder-shown)]:-top-3 peer-[:not(:placeholder-shown)]:translate-y-0 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:font-medium peer-[:not(:placeholder-shown)]:text-navy-700"
-
+// Rótulo flutuante no estilo "outlined": começa dentro do campo (como
+// placeholder) e, ao focar/digitar, sobe suavemente até a borda, criando um
+// recorte nela (o fundo branco do rótulo abre a linha). Ele se move apenas
+// alguns pixels na horizontal — nada de sair voando pra fora.
 function FloatingField({
   id,
   name,
@@ -48,13 +47,18 @@ function FloatingField({
         required
         autoComplete={autoComplete}
         placeholder=" "
-        className="peer w-full rounded-xl border border-navy-200 bg-white py-3 pl-10 pr-3.5 text-sm text-navy-950 outline-none transition-all focus:border-navy-500 focus:ring-4 focus:ring-navy-500/10"
+        className="peer w-full rounded-xl border border-navy-200 bg-white py-3.5 pl-10 pr-4 text-sm text-navy-950 outline-none transition-all duration-200 focus:border-navy-500 focus:ring-4 focus:ring-navy-500/10"
       />
       <Icon
         className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-navy-300 transition-colors peer-focus:text-navy-600"
         aria-hidden
       />
-      <label htmlFor={id} className={floatingLabelCls}>
+      <label
+        htmlFor={id}
+        className="pointer-events-none absolute left-10 top-1/2 -translate-y-1/2 bg-transparent px-1 text-sm text-navy-400 transition-all duration-200
+          peer-focus:left-3.5 peer-focus:top-0 peer-focus:bg-white peer-focus:text-xs peer-focus:font-medium peer-focus:text-navy-600
+          peer-[:not(:placeholder-shown)]:left-3.5 peer-[:not(:placeholder-shown)]:top-0 peer-[:not(:placeholder-shown)]:bg-white peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:font-medium peer-[:not(:placeholder-shown)]:text-navy-600"
+      >
         {label}
       </label>
     </div>

@@ -22,18 +22,10 @@ export default async function AdminPage({
 
   return (
     <div className="scroll-dark relative flex min-h-screen items-center justify-center overflow-hidden bg-navy-950 px-4 py-16">
-      {/* Fundo: gradiente base */}
+      {/* Fundo limpo com leve profundidade, sem elementos decorativos */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-gradient-to-br from-navy-950 via-navy-900 to-navy-800"
-      />
-
-      {/* Fundo: imagem gerada (SVG), bem desfocada */}
-      <img
-        src="/login-bg.svg"
-        alt=""
-        aria-hidden
-        className="pointer-events-none absolute inset-0 h-full w-full scale-110 object-cover opacity-70 blur-3xl"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-b from-navy-950 via-navy-900 to-navy-950"
       />
 
       {/* Card branco */}
