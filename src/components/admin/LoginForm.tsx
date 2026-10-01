@@ -11,7 +11,7 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-b from-navy-800 to-navy-950 px-4 py-3 text-sm font-semibold text-white shadow-lg shadow-navy-950/30 transition-all duration-200 hover:-translate-y-0.5 hover:from-navy-700 hover:to-navy-900 hover:shadow-xl hover:shadow-navy-950/40 active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
+      className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-navy-900 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-navy-800 disabled:cursor-not-allowed disabled:opacity-70"
     >
       {pending && <Loader2 className="h-4 w-4 animate-spin" aria-hidden />}
       {pending ? "Autenticando..." : "Acessar painel"}
@@ -19,55 +19,69 @@ function SubmitButton() {
   )
 }
 
+const floatingLabelCls =
+  "pointer-events-none absolute left-10 top-1/2 -translate-y-1/2 text-sm text-navy-400 transition-all duration-200 " +
+  "peer-focus:left-0 peer-focus:-top-3 peer-focus:translate-y-0 peer-focus:text-xs peer-focus:font-medium peer-focus:text-navy-700 " +
+  "peer-[:not(:placeholder-shown)]:left-0 peer-[:not(:placeholder-shown)]:-top-3 peer-[:not(:placeholder-shown)]:translate-y-0 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:font-medium peer-[:not(:placeholder-shown)]:text-navy-700"
+
+function FloatingField({
+  id,
+  name,
+  type,
+  label,
+  autoComplete,
+  icon: Icon,
+}: {
+  id: string
+  name: string
+  type: string
+  label: string
+  autoComplete: string
+  icon: typeof Mail
+}) {
+  return (
+    <div className="relative">
+      <input
+        id={id}
+        name={name}
+        type={type}
+        required
+        autoComplete={autoComplete}
+        placeholder=" "
+        className="peer w-full rounded-xl border border-navy-200 bg-white py-3 pl-10 pr-3.5 text-sm text-navy-950 outline-none transition-all focus:border-navy-500 focus:ring-4 focus:ring-navy-500/10"
+      />
+      <Icon
+        className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-navy-300 transition-colors peer-focus:text-navy-600"
+        aria-hidden
+      />
+      <label htmlFor={id} className={floatingLabelCls}>
+        {label}
+      </label>
+    </div>
+  )
+}
+
 export function LoginForm({ hasError }: { hasError: boolean }) {
   const [remember, setRemember] = useState(true)
 
-  const inputCls =
-    "w-full rounded-xl border border-navy-100 bg-navy-50/60 py-2.5 pl-10 pr-3.5 text-sm text-navy-950 placeholder:text-navy-300 outline-none transition-all focus:border-navy-500 focus:bg-white focus:ring-4 focus:ring-navy-500/10"
-
   return (
-    <form action={login} className="mt-8 space-y-5">
-      <div>
-        <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-navy-800">
-          E-mail
-        </label>
-        <div className="relative">
-          <Mail
-            className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-navy-300"
-            aria-hidden
-          />
-          <input
-            id="email"
-            name="email"
-            type="email"
-            required
-            autoComplete="email"
-            placeholder="seu@email.com"
-            className={inputCls}
-          />
-        </div>
-      </div>
-
-      <div>
-        <label htmlFor="password" className="mb-1.5 block text-sm font-medium text-navy-800">
-          Senha
-        </label>
-        <div className="relative">
-          <Lock
-            className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-navy-300"
-            aria-hidden
-          />
-          <input
-            id="password"
-            name="password"
-            type="password"
-            required
-            autoComplete="current-password"
-            placeholder="••••••••"
-            className={inputCls}
-          />
-        </div>
-      </div>
+    <form action={login} className="mt-8 space-y-6">
+      <FloatingField
+        id="email"
+        name="email"
+        type="email"
+        label="E-mail"
+        autoComplete="email"
+        icon={Mail}
+      />
+      <FloatingField
+        id="password"
+        name="password"
+        type="password"
+        label="Senha"
+        autoComplete="current-password"
+        icon={Lock}
+      />
 
       <label className="flex cursor-pointer select-none items-center gap-2.5 text-sm text-navy-700">
         <input

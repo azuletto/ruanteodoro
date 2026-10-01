@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next"
-import { Playfair_Display, Inter } from "next/font/google"
+import { Playfair_Display, Inter, Marcellus } from "next/font/google"
 import "./globals.css"
 
 const inter = Inter({
@@ -12,6 +12,12 @@ const playfair = Playfair_Display({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
   style: ["normal", "italic"],
+})
+
+const marcellus = Marcellus({
+  variable: "--font-marcellus",
+  subsets: ["latin"],
+  weight: "400",
 })
 
 const SITE_URL = "https://ruanteodoro.vercel.app"
@@ -122,7 +128,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="pt-br" className={`${inter.variable} ${playfair.variable}`}>
+    <html lang="pt-br" className={`${inter.variable} ${playfair.variable} ${marcellus.variable}`}>
       <body>{children}</body>
     </html>
   )
