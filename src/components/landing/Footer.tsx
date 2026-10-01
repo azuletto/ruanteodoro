@@ -4,6 +4,9 @@ import Link from "next/link"
 import type { SiteContent } from "@/types"
 
 export function Footer({ content }: { content: SiteContent }) {
+  const anoAtual = new Date().getFullYear()
+  const copyright = content.footer_copyright.replace(/\b(19|20)\d{2}\b/, String(anoAtual))
+
   return (
     <footer id="contato" className="scroll-mt-20 bg-navy-950 text-white">
       <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
@@ -14,7 +17,7 @@ export function Footer({ content }: { content: SiteContent }) {
               alt={content.footer_name}
               width={180}
               height={48}
-              className="h-10 w-auto"
+              className="h-12 w-auto"
             />
           </div>
 
@@ -25,7 +28,12 @@ export function Footer({ content }: { content: SiteContent }) {
             </li>
             <li className="flex items-center gap-3">
               <Mail className="h-4 w-4 shrink-0" aria-hidden />
-              {content.footer_email}
+              <a
+                href={`mailto:${content.footer_email}`}
+                className="transition-colors duration-200 hover:text-white"
+              >
+                {content.footer_email}
+              </a>
             </li>
           </ul>
 
@@ -46,7 +54,7 @@ export function Footer({ content }: { content: SiteContent }) {
         </div>
 
         <div className="mt-12 border-t border-white/10 pt-8 text-center text-xs text-navy-300">
-          <p>{content.footer_copyright}</p>
+          <p>{copyright}</p>
         </div>
       </div>
     </footer>
