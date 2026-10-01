@@ -51,3 +51,60 @@ body {
     cursor: not-allowed;
   }
 }
+
+/* ---------- Scrollbars personalizadas ----------
+   Padrão: thumb azul-marinho fino e discreto (áreas claras).
+   Em contextos escuros, usar a classe .scroll-dark (thumb branco). */
+:root {
+  --sb-thumb: rgba(52, 85, 131, 0.45);
+  --sb-thumb-hover: rgba(52, 85, 131, 0.75);
+  --sb-track: transparent;
+}
+
+.scroll-dark {
+  --sb-thumb: rgba(255, 255, 255, 0.3);
+  --sb-thumb-hover: rgba(255, 255, 255, 0.55);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--sb-thumb) var(--sb-track);
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--sb-track);
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--sb-thumb);
+  border-radius: 9999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--sb-thumb-hover);
+}
+
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* ---------- Animação de abertura dos dropdowns ---------- */
+@keyframes select-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.select-in {
+  animation: select-in 0.12s ease-out;
+}
