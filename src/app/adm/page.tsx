@@ -22,12 +22,12 @@ export default async function AdminPage({
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-navy-950 px-4">
-      <div className="w-full max-w-sm rounded-lg border border-white/10 bg-navy-900 p-8">
-        <h1 className="font-display text-2xl font-semibold text-white">
+      <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-navy-900 p-8 shadow-xl shadow-navy-950/50">
+        <h1 className="font-display text-2xl font-bold text-white">
           Painel Administrativo
         </h1>
         <p className="mt-1 text-sm text-navy-300">
-          Ruan Teodoro — Pesquisa
+          Gestão de conteúdo do site
         </p>
 
         <LoginForm hasError={Boolean(erro)} />

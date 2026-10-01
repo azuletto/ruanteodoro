@@ -29,8 +29,8 @@ export function Articles({ content }: { content: SiteContent }) {
         </h2>
 
         {items.length === 0 ? (
-          <p className="mt-14 text-center text-sm leading-relaxed text-slate-500">
-            Nenhuma pesquisa cadastrada ainda.
+          <p className="mt-14 text-center text-base leading-relaxed text-slate-400">
+            Nenhuma publicação cadastrada até o momento.
           </p>
         ) : (
         <div className="mt-14 space-y-10">

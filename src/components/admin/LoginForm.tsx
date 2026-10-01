@@ -14,7 +14,7 @@ function SubmitButton() {
       className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-emerald-700 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-emerald-600 disabled:cursor-not-allowed disabled:opacity-70"
     >
       {pending && <Loader2 className="h-4 w-4 animate-spin" aria-hidden />}
-      {pending ? "Entrando..." : "Entrar"}
+      {pending ? "Autenticando..." : "Acessar painel"}
     </button>
   )
 }
@@ -34,7 +34,8 @@ export function LoginForm({ hasError }: { hasError: boolean }) {
           type="email"
           required
           autoComplete="email"
-          className="mt-1 w-full rounded-md border border-white/10 bg-navy-950 px-3 py-2.5 text-sm text-white outline-none transition-colors focus:border-navy-400"
+          placeholder="seu@email.com"
+          className="mt-1 w-full rounded-md border border-white/10 bg-navy-950 px-3 py-2.5 text-sm text-white placeholder:text-navy-500 outline-none transition-colors focus:border-navy-400"
         />
       </div>
       <div>
@@ -47,7 +48,8 @@ export function LoginForm({ hasError }: { hasError: boolean }) {
           type="password"
           required
           autoComplete="current-password"
-          className="mt-1 w-full rounded-md border border-white/10 bg-navy-950 px-3 py-2.5 text-sm text-white outline-none transition-colors focus:border-navy-400"
+          placeholder="••••••••"
+          className="mt-1 w-full rounded-md border border-white/10 bg-navy-950 px-3 py-2.5 text-sm text-white placeholder:text-navy-500 outline-none transition-colors focus:border-navy-400"
         />
       </div>
 
@@ -60,11 +62,11 @@ export function LoginForm({ hasError }: { hasError: boolean }) {
           onChange={(e) => setRemember(e.target.checked)}
           className="h-4 w-4 rounded border-white/20 bg-navy-950 accent-emerald-600"
         />
-        Lembrar de mim
+        Manter sessão ativa
       </label>
 
       {hasError && (
-        <p className="text-sm text-red-400">E-mail ou senha inválidos.</p>
+        <p className="text-sm text-red-400">Credenciais inválidas. Verifique e tente novamente.</p>
       )}
 
       <SubmitButton />

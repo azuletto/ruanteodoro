@@ -35,9 +35,9 @@ import type {
 } from "@/types"
 
 const SECTION_LABELS: Record<string, string> = {
-  areas: "Áreas de Pesquisa",
-  sobre: "Sobre",
-  artigos: "Artigos",
+  areas: "Linhas de Pesquisa",
+  sobre: "Sobre o Pesquisador",
+  artigos: "Publicações",
 }
 
 const SECTION_COLORS: Record<string, string> = {
@@ -574,7 +574,7 @@ export function ContentEditor({
           </div>
         )}
 
-        <SectionCard title="Configurações Rápidas" defaultOpen>
+        <SectionCard title="Configurações Gerais" defaultOpen>
           <div className="space-y-5">
             <div className="min-w-0">
               <span className={labelCls}>Foto (seção Sobre)</span>
@@ -604,7 +604,7 @@ export function ContentEditor({
           </div>
         </SectionCard>
 
-        <SectionCard title="Layout e Ordem" defaultOpen>
+        <SectionCard title="Estrutura e Ordem das Seções" defaultOpen>
           <PreviewBox>
             <div className="max-h-60 overflow-y-auto">
               <div className="mb-1 flex h-5 w-full items-center justify-between rounded bg-navy-900 px-1.5">
@@ -724,7 +724,7 @@ export function ContentEditor({
           </div>
         </SectionCard>
 
-        <SectionCard title="Sobre">
+        <SectionCard title="Sobre o Pesquisador">
           <PreviewBox>
             <div className="flex h-16 gap-2">
               <div className="h-full w-1/3 rounded-md bg-slate-300" />
@@ -782,7 +782,7 @@ export function ContentEditor({
           </div>
         </SectionCard>
 
-        <SectionCard title="Áreas de Atuação">
+        <SectionCard title="Linhas de Pesquisa">
           <PreviewBox>
             <div className="grid h-20 grid-cols-2 gap-1.5">
               {[0, 1, 2, 3].map((i) => (
@@ -881,7 +881,7 @@ export function ContentEditor({
           </div>
         </SectionCard>
 
-        <SectionCard title="Artigos e Publicações">
+        <SectionCard title="Publicações e Pesquisas">
           <PreviewBox>
             <div className="flex h-16 flex-col gap-1.5">
               <div className="flex gap-1.5">
@@ -1084,7 +1084,7 @@ export function ContentEditor({
           </div>
         </SectionCard>
 
-        <SectionCard title="Links do Menu">
+        <SectionCard title="Links do Menu de Navegação">
           <PreviewBox>
             <div className="flex h-10 items-center gap-1.5">
               <div className="h-1.5 w-10 rounded-full bg-slate-300" />
@@ -1148,7 +1148,7 @@ export function ContentEditor({
           </button>
         </SectionCard>
 
-        <SectionCard title="SEO">
+        <SectionCard title="SEO e Metadados">
           <PreviewBox>
             <div className="flex h-12 flex-col justify-center gap-1.5">
               <div className="h-2 w-1/2 rounded-full bg-slate-300" />
