@@ -34,16 +34,30 @@ export function ArticleImageUploader({
 
   return (
     <div className="flex items-center gap-3">
-      <div className="flex h-20 w-32 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-slate-200 bg-slate-50">
+      {/* Preview com lixeira sobreposta para remover */}
+      <div className="relative h-20 w-32 shrink-0 overflow-hidden rounded-lg border border-slate-200 bg-slate-50">
         {value ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={value}
-            alt="Imagem do artigo"
-            className="h-full w-full object-cover"
-          />
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={value}
+              alt="Imagem do artigo"
+              className="h-full w-full object-cover"
+            />
+            <button
+              type="button"
+              onClick={() => onChange(null)}
+              aria-label="Remover imagem"
+              title="Remover imagem"
+              className="absolute right-1 top-1 inline-flex h-7 w-7 items-center justify-center rounded-md bg-white/90 text-slate-600 shadow-sm transition-colors hover:bg-red-600 hover:text-white"
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
+          </>
         ) : (
-          <span className="text-xs text-slate-400">Sem imagem</span>
+          <div className="flex h-full w-full items-center justify-center">
+            <span className="text-xs text-slate-400">Sem imagem</span>
+          </div>
         )}
       </div>
 
