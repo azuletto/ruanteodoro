@@ -1055,11 +1055,6 @@ export function ContentEditor({
               onChange={(v) => set("footer_oab", v)}
             />
             <Field
-              label="Descrição curta (rodapé)"
-              value={draft.footer_address}
-              onChange={(v) => set("footer_address", v)}
-            />
-            <Field
               label="E-mail"
               value={draft.footer_email}
               onChange={(v) => set("footer_email", v)}

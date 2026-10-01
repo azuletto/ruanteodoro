@@ -16,9 +16,6 @@ export function Footer({ content }: { content: SiteContent }) {
               height={48}
               className="h-10 w-auto"
             />
-            <p className="mt-4 text-sm text-navy-200">
-              {content.footer_address}
-            </p>
           </div>
 
           <ul className="space-y-3 text-sm text-navy-200">
