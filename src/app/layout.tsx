@@ -16,33 +16,33 @@ const cormorant = Cormorant_Garamond({
 export const metadata: Metadata = {
   metadataBase: new URL("https://ruanteodoro.vercel.app"),
   title: {
-    default: "Ruan Teodoro | Advocacia que resolve",
+    default: "Ruan Teodoro | Pesquisa em Direito e Tecnologia",
     template: "%s | Ruan Teodoro",
   },
   description:
-    "Advogado especialista em Direito do Consumidor, Previdenciário, Civil e Digital. Resolvo seu problema com estratégia e sem enrolação. Atendimento 100% online.",
+    "Pesquisa acadêmica em Direito Digital, Proteção de Dados e Direito do Consumidor. Publicações sobre LGPD, perfilamento, publicidade direcionada e direitos fundamentais no ambiente digital.",
   openGraph: {
-    title: "Ruan Teodoro | Advocacia que resolve",
+    title: "Ruan Teodoro | Pesquisa em Direito e Tecnologia",
     description:
-      "Consumidor lesado, benefício negado, contrato abusivo ou fraude digital? Fale direto com o advogado, sem intermediários.",
+      "Investigação acadêmica sobre os impactos da tecnologia nas relações de consumo, proteção de dados e direitos fundamentais. Publicações e pesquisas em revistas especializadas.",
     type: "website",
     locale: "pt_BR",
-    siteName: "Ruan Teodoro Advocacia",
+    siteName: "Ruan Teodoro",
     url: "https://ruanteodoro.vercel.app",
     images: [
       {
         url: "/banner.png",
         width: 2000,
         height: 2000,
-        alt: "Ruan Teodoro Advocacia",
+        alt: "Ruan Teodoro — Pesquisa em Direito e Tecnologia",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ruan Teodoro | Advocacia que resolve",
+    title: "Ruan Teodoro | Pesquisa em Direito e Tecnologia",
     description:
-      "Consumidor lesado, benefício negado, contrato abusivo ou fraude digital? Fale direto com o advogado, sem intermediários.",
+      "Investigação acadêmica sobre Direito Digital, Proteção de Dados e Direito do Consumidor. Publicações sobre LGPD e direitos fundamentais no ambiente digital.",
     images: ["/banner.png"],
   },
   icons: {

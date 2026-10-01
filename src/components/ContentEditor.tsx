@@ -982,23 +982,11 @@ export function ContentEditor({
 
         <SectionCard title="Contato">
           <PreviewBox>
-            <div className="grid h-12 grid-cols-3 gap-1.5">
-              {[0, 1, 2].map((i) => (
-                <div key={i} className="rounded-md bg-slate-200" />
-              ))}
+            <div className="grid h-12 grid-cols-1 gap-1.5">
+              <div className="rounded-md bg-slate-200" />
             </div>
           </PreviewBox>
-          <div className="grid gap-3 sm:grid-cols-3">
-            <Field
-              label="WhatsApp"
-              value={draft.whatsapp_number}
-              onChange={(v) => set("whatsapp_number", v)}
-            />
-            <Field
-              label="Telefone"
-              value={draft.phone}
-              onChange={(v) => set("phone", v)}
-            />
+          <div className="grid gap-3">
             <Field
               label="E-mail"
               value={draft.email}
@@ -1027,24 +1015,14 @@ export function ContentEditor({
               onChange={(v) => set("footer_oab", v)}
             />
             <Field
-              label="Endereço"
+              label="Descrição curta (rodapé)"
               value={draft.footer_address}
               onChange={(v) => set("footer_address", v)}
-            />
-            <Field
-              label="Telefone"
-              value={draft.footer_phone}
-              onChange={(v) => set("footer_phone", v)}
             />
             <Field
               label="E-mail"
               value={draft.footer_email}
               onChange={(v) => set("footer_email", v)}
-            />
-            <Field
-              label="WhatsApp"
-              value={draft.footer_whatsapp}
-              onChange={(v) => set("footer_whatsapp", v)}
             />
             <Field
               label="Link de privacidade"

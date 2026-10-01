@@ -37,6 +37,18 @@ export async function getSiteContent(): Promise<SiteContent> {
     }
   }
 
+  // Normaliza a ordem das seções: o banco pode guardar a ordem antiga
+  // (com "diferenciais"/"faq"), que não existem mais. Mantém só as seções
+  // válidas, preservando a ordem customizada, e garante que "artigos"
+  // sempre apareça.
+  const VALID_SECTIONS = ["areas", "sobre", "artigos"]
+  const rawOrder = Array.isArray(merged.section_order)
+    ? (merged.section_order as string[])
+    : []
+  const kept = rawOrder.filter((s) => VALID_SECTIONS.includes(s))
+  const missing = VALID_SECTIONS.filter((s) => !kept.includes(s))
+  merged.section_order = [...kept, ...missing]
+
   // Carregar artigos da tabela separada
   const { data: articlesData } = await supabase
     .from("articles")
