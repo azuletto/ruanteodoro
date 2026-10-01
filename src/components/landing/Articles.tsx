@@ -8,8 +8,6 @@ export function Articles({ content }: { content: SiteContent }) {
     .filter((item) => item.active)
     .sort((a, b) => a.article_order - b.article_order)
 
-  if (items.length === 0) return null
-
   return (
     <section id="artigos" className="scroll-mt-20 bg-white">
       <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 md:py-28">
@@ -17,6 +15,11 @@ export function Articles({ content }: { content: SiteContent }) {
           {content.articles_title}
         </h2>
 
+        {items.length === 0 ? (
+          <p className="mt-14 text-center text-sm leading-relaxed text-slate-500">
+            Nenhuma pesquisa cadastrada ainda.
+          </p>
+        ) : (
         <div className="mt-14 space-y-10">
           {items.map((article) => {
             const hasImage = Boolean(article.image_url)
@@ -88,6 +91,7 @@ export function Articles({ content }: { content: SiteContent }) {
             )
           })}
         </div>
+        )}
       </div>
     </section>
   )

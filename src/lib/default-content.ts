@@ -60,58 +60,9 @@ export const defaultContent: SiteContent = {
   differentials_title: "Diferenciais",
   differentials: [],
   articles_title: "Publicações e Pesquisas",
-  articles: [
-    {
-      id: 1,
-      title: "Perfilamento para Publicidade Direcionada",
-      summary:
-        "Este estudo investiga como a prática de perfilamento para publicidade direcionada, embora não expressamente vedada pela LGPD, pode ser entendida como prática abusiva à luz do Art. 39 do CDC, visto que o rastreamento via cookies e sistemas preditivos, frequentemente sem o consentimento livre e informado do usuário, aprofunda a assimetria de poder/informação, minando a autonomia e a capacidade de escolha do consumidor.",
-      content:
-        "Este estudo investiga como a prática de perfilamento para publicidade direcionada, embora não expressamente vedada pela LGPD, pode ser entendida como prática abusiva à luz do Art. 39 do CDC, visto que o rastreamento via cookies e sistemas preditivos, frequentemente sem o consentimento livre e informado do usuário, aprofunda a assimetria de poder/informação, minando a autonomia e a capacidade de escolha do consumidor.",
-      image_url: null,
-      link_url:
-        "https://ijeditores.com/pop.php?option=articulo&Hash=7b9e617f6f76ab44508e4bd784a8f9e7",
-      reference:
-        "TEODORO, Ruan Ricardo; ABILIO, Juan Roque. Perfilamento para publicidade direcionada: prática abusiva à luz do Código de Defesa do Consumidor e da LGPD? IusTech: Revista de Derecho y Tecnologia, n. 9, set. 2026.",
-      citation: "IJ-VI-CDXII-541",
-      published_in: "IusTech: Revista de Derecho y Tecnologia",
-      year: 2026,
-      article_order: 1,
-      active: true,
-    },
-    {
-      id: 2,
-      title: "Consentimento e Autonomia na LGPD",
-      summary:
-        "Análise crítica sobre a validade do consentimento como base legal para o tratamento de dados pessoais, investigando se os modelos atuais de consentimento (termos de uso, políticas de privacidade) realmente garantem a autonomia do titular ou se tornaram meras formalidades.",
-      content: "",
-      image_url: null,
-      link_url: null,
-      reference:
-        "TEODORO, Ruan Ricardo. Consentimento e autonomia na LGPD: uma análise crítica. Revista Brasileira de Direito Digital, v. 4, 2026.",
-      citation: null,
-      published_in: "Revista Brasileira de Direito Digital",
-      year: 2026,
-      article_order: 2,
-      active: true,
-    },
-    {
-      id: 3,
-      title: "Responsabilidade Civil de Plataformas Digitais",
-      summary:
-        "Estudo sobre os critérios de responsabilização de plataformas digitais por danos causados a consumidores, analisando o marco legal brasileiro e comparando com soluções adotadas na União Europeia (DSA) e nos Estados Unidos.",
-      content: "",
-      image_url: null,
-      link_url: null,
-      reference:
-        "TEODORO, Ruan Ricardo. Responsabilidade civil de plataformas digitais: critérios e desafios. Revista de Direito do Consumidor, n. 145, 2026.",
-      citation: null,
-      published_in: "Revista de Direito do Consumidor",
-      year: 2026,
-      article_order: 3,
-      active: true,
-    },
-  ],
+  // Sem fallback: artigos vêm exclusivamente do banco. A lista padrão é vazia
+  // para que nenhuma pesquisa inventada apareça no site.
+  articles: [],
   faq_title: "",
   faq_items: [],
   footer_name: "Ruan Teodoro",

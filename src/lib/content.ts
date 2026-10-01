@@ -49,16 +49,16 @@ export async function getSiteContent(): Promise<SiteContent> {
   const missing = VALID_SECTIONS.filter((s) => !kept.includes(s))
   merged.section_order = [...kept, ...missing]
 
-  // Carregar artigos da tabela separada
+  // Artigos vêm SOMENTE do banco — sem fallback. Se não houver nenhum
+  // cadastrado (ou a tabela ainda não existir), a lista fica vazia e a página
+  // mostra "Nenhuma pesquisa cadastrada ainda". Nunca exibir artigos padrão.
   const { data: articlesData } = await supabase
     .from("articles")
     .select("*")
     .eq("active", true)
     .order("article_order", { ascending: true })
 
-  if (articlesData && articlesData.length > 0) {
-    merged.articles = articlesData as Article[]
-  }
+  merged.articles = (articlesData ?? []) as Article[]
 
   return merged
 }
