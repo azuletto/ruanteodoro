@@ -5,7 +5,7 @@ import type { SiteContent } from "@/types"
 
 export function Footer({ content }: { content: SiteContent }) {
   const anoAtual = new Date().getFullYear()
-  const copyright = content.footer_copyright.replace(/\b(19|20)\d{2}\b/, String(anoAtual))
+  const copyright = `© ${anoAtual} ${content.footer_name}. Todos os direitos reservados.`
 
   return (
     <footer id="contato" className="scroll-mt-20 bg-navy-950 text-white">
