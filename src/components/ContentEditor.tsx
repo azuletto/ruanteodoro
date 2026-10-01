@@ -23,6 +23,7 @@ import { SiteIcon, AVAILABLE_ICONS } from "@/lib/icons"
 import { RichTextField } from "@/components/admin/RichTextField"
 import { PhotoUploader } from "@/components/admin/PhotoUploader"
 import { ArticleImageUploader } from "@/components/admin/ArticleImageUploader"
+import { CustomSelect } from "@/components/admin/CustomSelect"
 import type {
   Article,
   Differential,
@@ -51,13 +52,13 @@ const inputCls =
 const labelCls = "mb-1 block text-xs font-medium text-slate-600"
 
 const cardCls =
-  "overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm"
+  "overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-shadow hover:shadow-md"
 
 const smallBtnCls =
-  "inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white p-1.5 text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+  "inline-flex items-center justify-center rounded-lg border border-slate-300 bg-white p-1.5 text-slate-600 transition-all hover:bg-navy-50 hover:border-navy-300 hover:text-navy-700 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-white disabled:hover:border-slate-300 disabled:hover:text-slate-600"
 
 const addBtnCls =
-  "inline-flex items-center gap-1.5 rounded-lg border border-dashed border-slate-300 px-3 py-2 text-sm text-slate-600 transition hover:border-navy-400 hover:text-navy-700"
+  "inline-flex items-center gap-1.5 rounded-lg border border-dashed border-slate-300 px-3 py-2 text-sm text-slate-600 transition-all hover:border-navy-400 hover:text-navy-700 hover:bg-navy-50/50"
 
 function Field({
   label,
@@ -118,11 +119,14 @@ function SectionCard({
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="flex w-full items-center justify-between gap-2 px-5 py-4 text-left"
+        className="flex w-full items-center justify-between gap-2 px-5 py-4 text-left transition-colors hover:bg-slate-50/50"
       >
-        <span className="text-sm font-semibold text-navy-900">{title}</span>
+        <div className="flex items-center gap-2">
+          <span className="h-2 w-2 rounded-full bg-navy-500" />
+          <span className="text-sm font-semibold text-navy-900">{title}</span>
+        </div>
         <ChevronDown
-          className={`h-4 w-4 shrink-0 text-slate-400 transition-transform ${open ? "rotate-180" : ""}`}
+          className={`h-4 w-4 shrink-0 text-slate-400 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
         />
       </button>
       {open && (
@@ -647,21 +651,22 @@ export function ContentEditor({
                 <span className="flex-1 truncate text-sm text-slate-700">
                   {SECTION_LABELS[s] ?? s}
                 </span>
-                <select
-                  className="shrink-0 rounded-lg border border-slate-300 bg-white px-2 py-1.5 text-xs text-slate-700 transition focus:border-navy-500 focus:outline-none focus:ring-2 focus:ring-navy-200"
+                <CustomSelect
                   value={(draft.section_animations ?? {})[s] ?? "fade-up"}
-                  onChange={(e) =>
+                  onChange={(v) =>
                     set("section_animations", {
                       ...(draft.section_animations ?? {}),
-                      [s]: e.target.value,
+                      [s]: v,
                     })
                   }
-                >
-                  <option value="none">Sem animação</option>
-                  <option value="fade-up">Fade Up</option>
-                  <option value="fade-in">Fade In</option>
-                  <option value="scale-in">Scale In</option>
-                </select>
+                  options={[
+                    { value: "none", label: "Sem animação" },
+                    { value: "fade-up", label: "Fade Up" },
+                    { value: "fade-in", label: "Fade In" },
+                    { value: "scale-in", label: "Scale In" },
+                  ]}
+                  className="shrink-0 w-40"
+                />
                 <button
                   type="button"
                   className={smallBtnCls}
@@ -809,17 +814,12 @@ export function ContentEditor({
                       name={area.icon}
                       className="h-5 w-5 shrink-0 text-navy-600"
                     />
-                    <select
-                      className={inputCls}
+                    <CustomSelect
                       value={area.icon}
-                      onChange={(e) => updateArea(i, { icon: e.target.value })}
-                    >
-                      {AVAILABLE_ICONS.map((n) => (
-                        <option key={n} value={n}>
-                          {n}
-                        </option>
-                      ))}
-                    </select>
+                      onChange={(v) => updateArea(i, { icon: v })}
+                      options={AVAILABLE_ICONS.map((n) => ({ value: n, label: n }))}
+                      className="flex-1"
+                    />
                     <div className="ml-auto flex shrink-0 items-center gap-1">
                       <button
                         type="button"
@@ -972,18 +972,16 @@ export function ContentEditor({
                   </div>
                   <div className="mt-2">
                     <label className={labelCls}>Enquadramento da imagem</label>
-                    <select
-                      className={inputCls}
+                    <CustomSelect
                       value={item.image_fit ?? "cover-center"}
-                      onChange={(e) =>
-                        updateArticle(i, { image_fit: e.target.value })
-                      }
-                    >
-                      <option value="cover-center">Preencher — centralizado</option>
-                      <option value="cover-top">Preencher — mostrar topo</option>
-                      <option value="cover-bottom">Preencher — mostrar base</option>
-                      <option value="contain">Formato original (inteira)</option>
-                    </select>
+                      onChange={(v) => updateArticle(i, { image_fit: v })}
+                      options={[
+                        { value: "cover-center", label: "Preencher — centralizado" },
+                        { value: "cover-top", label: "Preencher — mostrar topo" },
+                        { value: "cover-bottom", label: "Preencher — mostrar base" },
+                        { value: "contain", label: "Formato original (inteira)" },
+                      ]}
+                    />
                   </div>
                   <div className="mt-2">
                     <RichTextField
