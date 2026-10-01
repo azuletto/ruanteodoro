@@ -17,6 +17,9 @@ export interface SiteContent {
   differentials_title: string
   differentials: Differential[]
 
+  articles_title: string
+  articles: Article[]
+
   faq_title: string
   faq_items: FaqItem[]
 
@@ -60,6 +63,21 @@ export interface Differential {
   title: string
   description: string
   order: number
+  active: boolean
+}
+
+export interface Article {
+  id: number
+  title: string
+  summary: string
+  content: string
+  image_url: string | null
+  link_url: string | null
+  reference: string
+  citation: string | null
+  published_in: string | null
+  year: number | null
+  article_order: number
   active: boolean
 }
 

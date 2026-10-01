@@ -22,6 +22,7 @@ import { SiteIcon, AVAILABLE_ICONS } from "@/lib/icons"
 import { RichTextField } from "@/components/admin/RichTextField"
 import { PhotoUploader } from "@/components/admin/PhotoUploader"
 import type {
+  Article,
   Differential,
   FaqItem,
   HeaderLink,
@@ -31,17 +32,15 @@ import type {
 } from "@/types"
 
 const SECTION_LABELS: Record<string, string> = {
-  areas: "Áreas de Atuação",
+  areas: "Áreas de Pesquisa",
   sobre: "Sobre",
-  diferenciais: "Diferenciais",
-  faq: "FAQ",
+  artigos: "Artigos",
 }
 
 const SECTION_COLORS: Record<string, string> = {
   areas: "bg-navy-600",
   sobre: "bg-slate-400",
-  diferenciais: "bg-navy-400",
-  faq: "bg-slate-300",
+  artigos: "bg-navy-400",
 }
 
 const inputCls =
@@ -186,32 +185,20 @@ function MiniSobre() {
   )
 }
 
-function MiniDiferenciais() {
-  return (
-    <div className="grid grid-cols-2 gap-1">
-      {[0, 1, 2, 3].map((i) => (
-        <div
-          key={i}
-          className="space-y-0.5 rounded border border-slate-200 bg-white p-1"
-        >
-          <div className="h-1 w-2/3 rounded-full bg-slate-300" />
-          <div className="h-1 w-full rounded-full bg-slate-200" />
-        </div>
-      ))}
-    </div>
-  )
-}
-
-function MiniFaq() {
+function MiniArtigos() {
   return (
     <div className="space-y-1">
-      {[0, 1, 2].map((i) => (
+      {[0, 1].map((i) => (
         <div
           key={i}
-          className="flex items-center gap-1 rounded border border-slate-200 bg-white px-1 py-0.5"
+          className="flex gap-1.5 rounded border border-slate-200 bg-white p-1"
         >
-          <div className="h-1 flex-1 rounded-full bg-slate-200" />
-          <div className="h-1.5 w-1.5 shrink-0 rounded-full bg-slate-300" />
+          <div className="h-8 w-12 shrink-0 rounded bg-slate-300" />
+          <div className="flex-1 space-y-0.5">
+            <div className="h-1.5 w-3/4 rounded-full bg-slate-300" />
+            <div className="h-1 w-full rounded-full bg-slate-200" />
+            <div className="h-1 w-2/3 rounded-full bg-slate-200" />
+          </div>
         </div>
       ))}
     </div>
@@ -221,8 +208,7 @@ function MiniFaq() {
 const MINI_SECTIONS: Record<string, ReactNode> = {
   areas: <MiniAreas />,
   sobre: <MiniSobre />,
-  diferenciais: <MiniDiferenciais />,
-  faq: <MiniFaq />,
+  artigos: <MiniArtigos />,
 }
 
 export function ContentEditor({
@@ -353,6 +339,46 @@ export function ContentEditor({
     set(
       "differentials",
       draft.differentials.filter((_, idx) => idx !== i)
+    )
+
+  const updateArticle = (i: number, patch: Partial<Article>) =>
+    set(
+      "articles",
+      draft.articles.map((a, idx) => (idx === i ? { ...a, ...patch } : a))
+    )
+
+  const moveArticle = (i: number, dir: -1 | 1) =>
+    set(
+      "articles",
+      moveItem(draft.articles, i, dir).map((a, idx) => ({
+        ...a,
+        article_order: idx,
+      }))
+    )
+
+  const addArticle = () =>
+    set("articles", [
+      ...draft.articles,
+      {
+        id: Date.now(),
+        title: "",
+        summary: "",
+        content: "",
+        image_url: null,
+        link_url: null,
+        reference: "",
+        citation: null,
+        published_in: null,
+        year: null,
+        article_order: draft.articles.length,
+        active: true,
+      },
+    ])
+
+  const removeArticle = (i: number) =>
+    set(
+      "articles",
+      draft.articles.filter((_, idx) => idx !== i)
     )
 
   const updateFaq = (i: number, patch: Partial<FaqItem>) =>
@@ -827,50 +853,41 @@ export function ContentEditor({
           </div>
         </SectionCard>
 
-        <SectionCard title="Diferenciais">
+        <SectionCard title="Artigos e Publicações">
           <PreviewBox>
-            <div className="grid h-16 grid-cols-2 gap-1.5">
-              {[0, 1, 2, 3].map((i) => (
-                <div key={i} className="rounded-md bg-slate-200" />
-              ))}
+            <div className="flex h-16 flex-col gap-1.5">
+              <div className="flex gap-1.5">
+                <div className="h-full w-1/4 rounded-md bg-slate-300" />
+                <div className="flex-1 space-y-1">
+                  <div className="h-2 w-2/3 rounded-full bg-slate-300" />
+                  <div className="h-1.5 w-full rounded-full bg-slate-200" />
+                  <div className="h-1.5 w-1/2 rounded-full bg-slate-200" />
+                </div>
+              </div>
             </div>
           </PreviewBox>
           <div className="grid gap-3">
             <Field
               label="Título da seção"
-              value={draft.differentials_title}
-              onChange={(v) => set("differentials_title", v)}
+              value={draft.articles_title}
+              onChange={(v) => set("articles_title", v)}
             />
             <div className="space-y-3">
-              {draft.differentials.map((item, i) => (
+              {draft.articles.map((item, i) => (
                 <div
                   key={item.id}
                   className="rounded-lg border border-slate-200 bg-slate-50 p-3"
                 >
                   <div className="flex items-center gap-2">
-                    <SiteIcon
-                      name={item.icon}
-                      className="h-5 w-5 shrink-0 text-navy-600"
-                    />
-                    <select
-                      className={inputCls}
-                      value={item.icon}
-                      onChange={(e) =>
-                        updateDifferential(i, { icon: e.target.value })
-                      }
-                    >
-                      {AVAILABLE_ICONS.map((n) => (
-                        <option key={n} value={n}>
-                          {n}
-                        </option>
-                      ))}
-                    </select>
+                    <span className="text-sm font-medium text-navy-900">
+                      {item.title || `Artigo ${i + 1}`}
+                    </span>
                     <div className="ml-auto flex shrink-0 items-center gap-1">
                       <button
                         type="button"
                         className={smallBtnCls}
                         disabled={i === 0}
-                        onClick={() => moveDifferential(i, -1)}
+                        onClick={() => moveArticle(i, -1)}
                         aria-label="Mover para cima"
                       >
                         <ArrowUp className="h-3.5 w-3.5" />
@@ -878,8 +895,8 @@ export function ContentEditor({
                       <button
                         type="button"
                         className={smallBtnCls}
-                        disabled={i === draft.differentials.length - 1}
-                        onClick={() => moveDifferential(i, 1)}
+                        disabled={i === draft.articles.length - 1}
+                        onClick={() => moveArticle(i, 1)}
                         aria-label="Mover para baixo"
                       >
                         <ArrowDown className="h-3.5 w-3.5" />
@@ -887,8 +904,8 @@ export function ContentEditor({
                       <button
                         type="button"
                         className={smallBtnCls}
-                        onClick={() => removeDifferential(i)}
-                        aria-label="Remover diferencial"
+                        onClick={() => removeArticle(i)}
+                        aria-label="Remover artigo"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
                       </button>
@@ -898,14 +915,47 @@ export function ContentEditor({
                     <Field
                       label="Título"
                       value={item.title}
-                      onChange={(v) => updateDifferential(i, { title: v })}
+                      onChange={(v) => updateArticle(i, { title: v })}
                     />
+                    <Field
+                      label="Publicado em"
+                      value={item.published_in ?? ""}
+                      onChange={(v) => updateArticle(i, { published_in: v || null })}
+                    />
+                    <Field
+                      label="Ano"
+                      value={item.year?.toString() ?? ""}
+                      onChange={(v) => updateArticle(i, { year: v ? parseInt(v, 10) : null })}
+                    />
+                    <Field
+                      label="Link de acesso"
+                      value={item.link_url ?? ""}
+                      onChange={(v) => updateArticle(i, { link_url: v || null })}
+                    />
+                    <Field
+                      label="Citação"
+                      value={item.citation ?? ""}
+                      onChange={(v) => updateArticle(i, { citation: v || null })}
+                    />
+                    <Field
+                      label="URL da imagem"
+                      value={item.image_url ?? ""}
+                      onChange={(v) => updateArticle(i, { image_url: v || null })}
+                    />
+                  </div>
+                  <div className="mt-2">
                     <RichTextField
-                      label="Descrição"
-                      value={item.description}
-                      onChange={(v) =>
-                        updateDifferential(i, { description: v })
-                      }
+                      label="Resumo"
+                      value={item.summary}
+                      onChange={(v) => updateArticle(i, { summary: v })}
+                      minRows={3}
+                    />
+                  </div>
+                  <div className="mt-2">
+                    <RichTextField
+                      label="Referência completa"
+                      value={item.reference}
+                      onChange={(v) => updateArticle(i, { reference: v })}
                       minRows={2}
                     />
                   </div>
@@ -914,7 +964,7 @@ export function ContentEditor({
                       type="checkbox"
                       checked={item.active}
                       onChange={(e) =>
-                        updateDifferential(i, { active: e.target.checked })
+                        updateArticle(i, { active: e.target.checked })
                       }
                       className="h-3.5 w-3.5 rounded border-slate-300"
                     />
@@ -923,95 +973,9 @@ export function ContentEditor({
                 </div>
               ))}
             </div>
-            <button type="button" onClick={addDifferential} className={addBtnCls}>
+            <button type="button" onClick={addArticle} className={addBtnCls}>
               <Plus className="h-4 w-4" />
-              Adicionar diferencial
-            </button>
-          </div>
-        </SectionCard>
-
-        <SectionCard title="FAQ">
-          <PreviewBox>
-            <div className="flex h-16 flex-col justify-center gap-1">
-              <div className="h-3 w-full rounded bg-slate-200" />
-              <div className="h-3 w-full rounded bg-slate-200" />
-              <div className="h-3 w-full rounded bg-slate-200" />
-              <div className="h-3 w-2/3 rounded bg-slate-200" />
-            </div>
-          </PreviewBox>
-          <div className="grid gap-3">
-            <Field
-              label="Título da seção"
-              value={draft.faq_title}
-              onChange={(v) => set("faq_title", v)}
-            />
-            <div className="space-y-3">
-              {draft.faq_items.map((item, i) => (
-                <div
-                  key={item.id}
-                  className="rounded-lg border border-slate-200 bg-slate-50 p-3"
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="flex-1 text-xs font-medium text-slate-500">
-                      Pergunta {i + 1}
-                    </span>
-                    <div className="flex shrink-0 items-center gap-1">
-                      <button
-                        type="button"
-                        className={smallBtnCls}
-                        disabled={i === 0}
-                        onClick={() => moveFaq(i, -1)}
-                        aria-label="Mover para cima"
-                      >
-                        <ArrowUp className="h-3.5 w-3.5" />
-                      </button>
-                      <button
-                        type="button"
-                        className={smallBtnCls}
-                        disabled={i === draft.faq_items.length - 1}
-                        onClick={() => moveFaq(i, 1)}
-                        aria-label="Mover para baixo"
-                      >
-                        <ArrowDown className="h-3.5 w-3.5" />
-                      </button>
-                      <button
-                        type="button"
-                        className={smallBtnCls}
-                        onClick={() => removeFaq(i)}
-                        aria-label="Remover pergunta"
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </button>
-                    </div>
-                  </div>
-                  <div className="mt-2 grid gap-2">
-                    <Field
-                      label="Pergunta"
-                      value={item.question}
-                      onChange={(v) => updateFaq(i, { question: v })}
-                    />
-                    <RichTextField
-                      label="Resposta"
-                      value={item.answer}
-                      onChange={(v) => updateFaq(i, { answer: v })}
-                      minRows={2}
-                    />
-                  </div>
-                  <label className="mt-2 flex items-center gap-2 text-xs text-slate-600">
-                    <input
-                      type="checkbox"
-                      checked={item.active}
-                      onChange={(e) => updateFaq(i, { active: e.target.checked })}
-                      className="h-3.5 w-3.5 rounded border-slate-300"
-                    />
-                    Ativo
-                  </label>
-                </div>
-              ))}
-            </div>
-            <button type="button" onClick={addFaq} className={addBtnCls}>
-              <Plus className="h-4 w-4" />
-              Adicionar pergunta
+              Adicionar artigo
             </button>
           </div>
         </SectionCard>

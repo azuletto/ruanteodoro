@@ -1,4 +1,4 @@
-import { BadgeCheck, Mail, MapPin, Phone } from "lucide-react"
+import { BadgeCheck, Mail } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import type { SiteContent } from "@/types"
@@ -16,20 +16,15 @@ export function Footer({ content }: { content: SiteContent }) {
               height={48}
               className="h-10 w-auto"
             />
+            <p className="mt-4 text-sm text-navy-200">
+              {content.footer_address}
+            </p>
           </div>
 
           <ul className="space-y-3 text-sm text-navy-200">
             <li className="flex items-center gap-3">
               <BadgeCheck className="h-4 w-4 shrink-0" aria-hidden />
               {content.footer_oab}
-            </li>
-            <li className="flex items-center gap-3">
-              <MapPin className="h-4 w-4 shrink-0" aria-hidden />
-              {content.footer_address}
-            </li>
-            <li className="flex items-center gap-3">
-              <Phone className="h-4 w-4 shrink-0" aria-hidden />
-              {content.footer_phone}
             </li>
             <li className="flex items-center gap-3">
               <Mail className="h-4 w-4 shrink-0" aria-hidden />

@@ -1,4 +1,4 @@
-import type { SiteContent } from "@/types"
+import type { Article, SiteContent } from "@/types"
 import { defaultContent } from "./default-content"
 
 function isSupabaseConfigured() {
@@ -35,6 +35,17 @@ export async function getSiteContent(): Promise<SiteContent> {
     if (value !== null && value !== undefined) {
       ;(merged as Record<string, unknown>)[key] = value
     }
+  }
+
+  // Carregar artigos da tabela separada
+  const { data: articlesData } = await supabase
+    .from("articles")
+    .select("*")
+    .eq("active", true)
+    .order("article_order", { ascending: true })
+
+  if (articlesData && articlesData.length > 0) {
+    merged.articles = articlesData as Article[]
   }
 
   return merged

@@ -1,11 +1,11 @@
-import { MessageCircle } from "lucide-react"
+import { BookOpen } from "lucide-react"
 import type { SiteContent } from "@/types"
 import { isSafeUrl } from "@/lib/security"
 
 export function Hero({ content }: { content: SiteContent }) {
   const ctaHref = isSafeUrl(content.hero_cta_link)
     ? content.hero_cta_link
-    : "#contato"
+    : "#artigos"
 
   return (
     <section className="bg-navy-900">
@@ -19,11 +19,9 @@ export function Hero({ content }: { content: SiteContent }) {
           </p>
           <a
             href={ctaHref}
-            target="_blank"
-            rel="noopener noreferrer"
             className="mt-10 inline-flex min-h-12 items-center gap-3 rounded-md bg-emerald-700 px-7 py-4 text-sm font-semibold tracking-wide text-white transition-all duration-200 hover:bg-emerald-600"
           >
-            <MessageCircle className="h-5 w-5" aria-hidden />
+            <BookOpen className="h-5 w-5" aria-hidden />
             {content.hero_cta_text}
           </a>
         </div>

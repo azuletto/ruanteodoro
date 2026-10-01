@@ -3,8 +3,7 @@ import { Header } from "@/components/landing/Header"
 import { Hero } from "@/components/landing/Hero"
 import { PracticeAreas } from "@/components/landing/PracticeAreas"
 import { About } from "@/components/landing/About"
-import { Differentials } from "@/components/landing/Differentials"
-import { Faq } from "@/components/landing/Faq"
+import { Articles } from "@/components/landing/Articles"
 import { Footer } from "@/components/landing/Footer"
 import { Reveal } from "@/components/landing/Reveal"
 
@@ -14,8 +13,7 @@ export default async function Home() {
   const sections: Record<string, React.ReactNode> = {
     areas: <PracticeAreas key="areas" content={content} />,
     sobre: <About key="sobre" content={content} />,
-    diferenciais: <Differentials key="diferenciais" content={content} />,
-    faq: <Faq key="faq" content={content} />,
+    artigos: <Articles key="artigos" content={content} />,
   }
 
   const animations = content.section_animations ?? {}
