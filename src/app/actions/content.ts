@@ -9,7 +9,6 @@ const ALLOWED_FIELDS = [
   "about_title", "about_bio", "about_photo_url", "about_highlights",
   "practice_title", "practice_subtitle", "practice_areas",
   "differentials_title", "differentials",
-  "articles_title", "articles",
   "faq_title", "faq_items",
   "footer_name", "footer_oab", "footer_address", "footer_phone",
   "footer_email", "footer_whatsapp", "footer_privacy_url",

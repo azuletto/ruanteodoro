@@ -17,6 +17,7 @@ import {
 } from "lucide-react"
 import { saveContent } from "@/app/actions/content"
 import { saveTerms } from "@/app/actions/terms"
+import { saveArticles } from "@/app/actions/articles"
 import { logout } from "@/app/actions/auth"
 import { SiteIcon, AVAILABLE_ICONS } from "@/lib/icons"
 import { RichTextField } from "@/components/admin/RichTextField"
@@ -242,15 +243,39 @@ export function ContentEditor({
       "sections",
       JSON.stringify(terms.map((t) => ({ title: t.title, content: t.content })))
     )
+    const articlesFormData = new FormData()
+    articlesFormData.set(
+      "articles",
+      JSON.stringify(
+        draft.articles.map((a) => ({
+          title: a.title,
+          summary: a.summary,
+          content: a.content,
+          image_url: a.image_url,
+          link_url: a.link_url,
+          reference: a.reference,
+          citation: a.citation,
+          published_in: a.published_in,
+          year: a.year,
+          active: a.active,
+        }))
+      )
+    )
     startTransition(async () => {
       const result = await saveContent(formData)
       const termsResult = await saveTerms(termsFormData)
-      if ((result && "error" in result) || (termsResult && "error" in termsResult)) {
+      const articlesResult = await saveArticles(articlesFormData)
+      if (
+        (result && "error" in result) ||
+        (termsResult && "error" in termsResult) ||
+        (articlesResult && "error" in articlesResult)
+      ) {
         setMessage({
           kind: "error",
           text:
             (result && "error" in result ? result.error : undefined) ??
             (termsResult && "error" in termsResult ? termsResult.error : undefined) ??
+            (articlesResult && "error" in articlesResult ? articlesResult.error : undefined) ??
             "Erro ao salvar",
         })
       } else {
@@ -867,11 +892,9 @@ export function ContentEditor({
             </div>
           </PreviewBox>
           <div className="grid gap-3">
-            <Field
-              label="Título da seção"
-              value={draft.articles_title}
-              onChange={(v) => set("articles_title", v)}
-            />
+            <p className="text-xs text-slate-500">
+              Título da seção: <span className="font-medium text-slate-700">{draft.articles_title}</span>
+            </p>
             <div className="space-y-3">
               {draft.articles.map((item, i) => (
                 <div
