@@ -9,6 +9,7 @@ interface ArticleInput {
   summary: string
   content: string
   image_url: string | null
+  image_fit: string
   link_url: string | null
   reference: string
   citation: string | null
@@ -57,6 +58,7 @@ export async function saveArticles(formData: FormData) {
       summary: a.summary,
       content: a.content,
       image_url: a.image_url,
+      image_fit: a.image_fit ?? "cover-center",
       link_url: a.link_url,
       reference: a.reference,
       citation: a.citation,

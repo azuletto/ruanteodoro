@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation"
 import { createSupabaseServerClient } from "@/lib/supabase/server"
-import { login } from "@/app/actions/auth"
+import { LoginForm } from "@/components/admin/LoginForm"
 
 export const metadata = { title: "Admin | Ruan Teodoro" }
 
@@ -27,53 +27,10 @@ export default async function AdminPage({
           Painel Administrativo
         </h1>
         <p className="mt-1 text-sm text-navy-300">
-          Ruan Teodoro Advocacia
+          Ruan Teodoro — Pesquisa
         </p>
 
-        <form action={login} className="mt-8 space-y-4">
-          <div>
-            <label htmlFor="email" className="text-sm font-medium text-navy-200">
-              E-mail
-            </label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              required
-              autoComplete="email"
-              className="mt-1 w-full rounded-md border border-white/10 bg-navy-950 px-3 py-2.5 text-sm text-white outline-none focus:border-navy-400"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="password"
-              className="text-sm font-medium text-navy-200"
-            >
-              Senha
-            </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              required
-              autoComplete="current-password"
-              className="mt-1 w-full rounded-md border border-white/10 bg-navy-950 px-3 py-2.5 text-sm text-white outline-none focus:border-navy-400"
-            />
-          </div>
-
-          {erro && (
-            <p className="text-sm text-red-400">
-              E-mail ou senha inválidos.
-            </p>
-          )}
-
-          <button
-            type="submit"
-            className="w-full rounded-md bg-emerald-700 px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-emerald-600"
-          >
-            Entrar
-          </button>
-        </form>
+        <LoginForm hasError={Boolean(erro)} />
       </div>
     </div>
   )

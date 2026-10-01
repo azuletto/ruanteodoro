@@ -1,7 +1,20 @@
 import Image from "next/image"
 import { ExternalLink, BookOpen } from "lucide-react"
-import type { SiteContent } from "@/types"
+import type { Article, SiteContent } from "@/types"
 import { isSafeUrl } from "@/lib/security"
+
+// Enquadramentos padronizados da imagem do artigo. Todos os cards usam a
+// mesma caixa (altura fixa), o que muda é como a imagem preenche/alinha.
+const IMAGE_FIT_CLASSES: Record<string, string> = {
+  "cover-center": "object-cover object-center",
+  "cover-top": "object-cover object-top",
+  "cover-bottom": "object-cover object-bottom",
+  contain: "object-contain object-center bg-slate-50",
+}
+
+function fitClass(article: Article): string {
+  return IMAGE_FIT_CLASSES[article.image_fit] ?? IMAGE_FIT_CLASSES["cover-center"]
+}
 
 export function Articles({ content }: { content: SiteContent }) {
   const items = content.articles
@@ -31,15 +44,15 @@ export function Articles({ content }: { content: SiteContent }) {
                 className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-all duration-200 hover:shadow-md"
               >
                 <div className="flex flex-col md:flex-row">
-                  {/* Imagem à esquerda */}
+                  {/* Imagem à esquerda — caixa padronizada, enquadramento por image_fit */}
                   {hasImage && (
-                    <div className="relative w-full shrink-0 md:w-72 lg:w-80">
+                    <div className="relative h-52 w-full shrink-0 overflow-hidden md:h-auto md:w-72 lg:w-80">
                       <Image
                         src={article.image_url!}
                         alt={article.title}
-                        width={320}
-                        height={240}
-                        className="h-48 w-full object-cover md:h-full"
+                        fill
+                        sizes="(max-width: 768px) 100vw, 320px"
+                        className={fitClass(article)}
                       />
                     </div>
                   )}

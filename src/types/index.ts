@@ -72,6 +72,7 @@ export interface Article {
   summary: string
   content: string
   image_url: string | null
+  image_fit: string
   link_url: string | null
   reference: string
   citation: string | null
@@ -80,6 +81,8 @@ export interface Article {
   article_order: number
   active: boolean
 }
+
+export type ArticleImageFit = "cover-center" | "cover-top" | "cover-bottom" | "contain"
 
 export interface FaqItem {
   id: number

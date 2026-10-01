@@ -22,6 +22,7 @@ import { logout } from "@/app/actions/auth"
 import { SiteIcon, AVAILABLE_ICONS } from "@/lib/icons"
 import { RichTextField } from "@/components/admin/RichTextField"
 import { PhotoUploader } from "@/components/admin/PhotoUploader"
+import { ArticleImageUploader } from "@/components/admin/ArticleImageUploader"
 import type {
   Article,
   Differential,
@@ -252,6 +253,7 @@ export function ContentEditor({
           summary: a.summary,
           content: a.content,
           image_url: a.image_url,
+          image_fit: a.image_fit,
           link_url: a.link_url,
           reference: a.reference,
           citation: a.citation,
@@ -390,6 +392,7 @@ export function ContentEditor({
         summary: "",
         content: "",
         image_url: null,
+        image_fit: "cover-center",
         link_url: null,
         reference: "",
         citation: null,
@@ -960,11 +963,27 @@ export function ContentEditor({
                       value={item.citation ?? ""}
                       onChange={(v) => updateArticle(i, { citation: v || null })}
                     />
-                    <Field
-                      label="URL da imagem"
-                      value={item.image_url ?? ""}
-                      onChange={(v) => updateArticle(i, { image_url: v || null })}
+                  </div>
+                  <div className="mt-2">
+                    <ArticleImageUploader
+                      value={item.image_url}
+                      onChange={(v) => updateArticle(i, { image_url: v })}
                     />
+                  </div>
+                  <div className="mt-2">
+                    <label className={labelCls}>Enquadramento da imagem</label>
+                    <select
+                      className={inputCls}
+                      value={item.image_fit ?? "cover-center"}
+                      onChange={(e) =>
+                        updateArticle(i, { image_fit: e.target.value })
+                      }
+                    >
+                      <option value="cover-center">Preencher — centralizado</option>
+                      <option value="cover-top">Preencher — mostrar topo</option>
+                      <option value="cover-bottom">Preencher — mostrar base</option>
+                      <option value="contain">Formato original (inteira)</option>
+                    </select>
                   </div>
                   <div className="mt-2">
                     <RichTextField
