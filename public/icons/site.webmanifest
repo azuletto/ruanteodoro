@@ -1,0 +1,24 @@
+{
+  "name": "Ruan Teodoro | Pesquisa em Direito e Tecnologia",
+  "short_name": "Ruan Teodoro",
+  "description": "Pesquisa acadêmica em Direito Digital, Proteção de Dados e Direito do Consumidor.",
+  "icons": [
+    {
+      "src": "/icons/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "theme_color": "#0d1b30",
+  "background_color": "#0d1b30",
+  "display": "standalone",
+  "start_url": "/",
+  "scope": "/"
+}

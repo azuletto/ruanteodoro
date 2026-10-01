@@ -14,49 +14,96 @@ const playfair = Playfair_Display({
   style: ["normal", "italic"],
 })
 
+const SITE_URL = "https://ruanteodoro.vercel.app"
+const SITE_NAME = "Ruan Teodoro"
+const SITE_TITLE = "Ruan Teodoro | Pesquisa em Direito e Tecnologia"
+const SITE_DESCRIPTION =
+  "Pesquisa acadêmica em Direito Digital, Proteção de Dados e Direito do Consumidor. Publicações sobre LGPD, perfilamento, publicidade direcionada e direitos fundamentais no ambiente digital."
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://ruanteodoro.vercel.app"),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Ruan Teodoro | Pesquisa em Direito e Tecnologia",
+    default: SITE_TITLE,
     template: "%s | Ruan Teodoro",
   },
-  description:
-    "Pesquisa acadêmica em Direito Digital, Proteção de Dados e Direito do Consumidor. Publicações sobre LGPD, perfilamento, publicidade direcionada e direitos fundamentais no ambiente digital.",
+  description: SITE_DESCRIPTION,
+  keywords: [
+    "Direito Digital",
+    "Proteção de Dados",
+    "LGPD",
+    "Direito do Consumidor",
+    "Perfilamento",
+    "Publicidade Direcionada",
+    "Direitos Fundamentais",
+    "Pesquisa Acadêmica",
+    "Ruan Teodoro",
+  ],
+  authors: [{ name: "Ruan Teodoro" }],
+  creator: "Ruan Teodoro",
+  publisher: "Ruan Teodoro",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true },
+  },
+  alternates: {
+    canonical: SITE_URL,
+  },
   openGraph: {
-    title: "Ruan Teodoro | Pesquisa em Direito e Tecnologia",
-    description:
-      "Investigação acadêmica sobre os impactos da tecnologia nas relações de consumo, proteção de dados e direitos fundamentais. Publicações e pesquisas em revistas especializadas.",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
     type: "website",
     locale: "pt_BR",
-    siteName: "Ruan Teodoro",
-    url: "https://ruanteodoro.vercel.app",
+    siteName: SITE_NAME,
+    url: SITE_URL,
     images: [
       {
         url: "/banner.png",
         width: 2000,
         height: 2000,
-        alt: "Ruan Teodoro — Pesquisa em Direito e Tecnologia",
+        alt: SITE_TITLE,
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ruan Teodoro | Pesquisa em Direito e Tecnologia",
-    description:
-      "Investigação acadêmica sobre Direito Digital, Proteção de Dados e Direito do Consumidor. Publicações sobre LGPD e direitos fundamentais no ambiente digital.",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
     images: ["/banner.png"],
   },
   icons: {
     icon: [
-      { url: "/favicon.ico", sizes: "32x32" },
-      { url: "/favicon.png", sizes: "2000x2000", type: "image/png" },
+      { url: "/icons/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/icons/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icons/favicon.ico", sizes: "48x48" },
     ],
-    apple: "/favicon.png",
+    apple: [
+      {
+        url: "/icons/apple-touch-icon.png",
+        sizes: "180x180",
+        type: "image/png",
+      },
+    ],
+    other: [
+      {
+        rel: "android-icon",
+        url: "/icons/android-chrome-192x192.png",
+        sizes: "192x192",
+        type: "image/png",
+      },
+      {
+        rel: "android-icon",
+        url: "/icons/android-chrome-512x512.png",
+        sizes: "512x512",
+        type: "image/png",
+      },
+    ],
   },
+  manifest: "/icons/site.webmanifest",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "Ruan Teodoro",
+    title: SITE_NAME,
   },
   formatDetection: {
     telephone: false,
@@ -64,7 +111,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: "#0f172a",
+  themeColor: "#0d1b30",
   width: "device-width",
   initialScale: 1,
 }
