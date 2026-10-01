@@ -742,11 +742,6 @@ export function ContentEditor({
               value={draft.about_title}
               onChange={(v) => set("about_title", v)}
             />
-            <Field
-              label="URL da foto"
-              value={draft.about_photo_url}
-              onChange={(v) => set("about_photo_url", v)}
-            />
             <RichTextField
               label="Biografia"
               value={draft.about_bio}

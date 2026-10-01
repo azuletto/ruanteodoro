@@ -39,10 +39,16 @@ export function CustomSelect({
 
   const selected = options.find((o) => o.value === value)
 
-  const updatePosition = () => {
+  // Recalcula a posição do menu em relação ao gatilho. Retorna false quando o
+  // gatilho saiu completamente da viewport (aí o menu deve fechar).
+  const updatePosition = (): boolean => {
     const trigger = triggerRef.current
-    if (!trigger) return
+    if (!trigger) return false
     const rect = trigger.getBoundingClientRect()
+    // Gatilho totalmente fora da viewport → sem âncora visível, fecha o menu.
+    const outOfView =
+      rect.bottom < 0 || rect.top > window.innerHeight
+    if (outOfView) return false
     const spaceBelow = window.innerHeight - rect.bottom
     const spaceAbove = rect.top
     const openUp = spaceBelow < MENU_MAX_HEIGHT + 16 && spaceAbove > spaceBelow
@@ -54,6 +60,7 @@ export function CustomSelect({
       width: Math.max(rect.width, 176),
       maxHeight,
     })
+    return true
   }
 
   useLayoutEffect(() => {
@@ -73,18 +80,27 @@ export function CustomSelect({
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setOpen(false)
     }
-    // Scroll/resize mudam a posição do gatilho — fecha para nunca desalinhar.
-    const onScrollOrResize = () => setOpen(false)
+    // Scroll DENTRO do próprio menu não pode fechá-lo (lista com muitas
+    // opções). Só reposiciona quando o scroll/resize vem de fora, e fecha
+    // apenas se o gatilho sair da viewport.
+    const onScroll = (e: Event) => {
+      const t = e.target
+      if (menuRef.current && t instanceof Node && menuRef.current.contains(t)) return
+      if (!updatePosition()) setOpen(false)
+    }
+    const onResize = () => {
+      if (!updatePosition()) setOpen(false)
+    }
 
     document.addEventListener("mousedown", onOutside)
     document.addEventListener("keydown", onKey)
-    window.addEventListener("scroll", onScrollOrResize, true)
-    window.addEventListener("resize", onScrollOrResize)
+    window.addEventListener("scroll", onScroll, true)
+    window.addEventListener("resize", onResize)
     return () => {
       document.removeEventListener("mousedown", onOutside)
       document.removeEventListener("keydown", onKey)
-      window.removeEventListener("scroll", onScrollOrResize, true)
-      window.removeEventListener("resize", onScrollOrResize)
+      window.removeEventListener("scroll", onScroll, true)
+      window.removeEventListener("resize", onResize)
     }
   }, [open])
 
