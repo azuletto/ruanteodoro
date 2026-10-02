@@ -35,46 +35,6 @@ export function renderInline(text: string): ReactNode[] {
   return nodes
 }
 
-// Renderiza o texto com os marcadores visíveis mas "apagados" (dim) e o
-// conteúdo formatado. Usado no overlay do editor em tempo real.
-export function renderPreviewInline(text: string): ReactNode[] {
-  const nodes: ReactNode[] = []
-  const regex = /\*\*(.+?)\*\*|_([^_]+?)_/g
-  let lastIndex = 0
-  let key = 0
-  let match: RegExpExecArray | null
-
-  while ((match = regex.exec(text)) !== null) {
-    if (match.index > lastIndex) {
-      nodes.push(text.slice(lastIndex, match.index))
-    }
-    if (match[1] !== undefined) {
-      nodes.push(
-        <span key={key++}>
-          <span className="text-slate-300">**</span>
-          <strong>{renderPreviewInline(match[1])}</strong>
-          <span className="text-slate-300">**</span>
-        </span>
-      )
-    } else if (match[2] !== undefined) {
-      nodes.push(
-        <span key={key++}>
-          <span className="text-slate-300">_</span>
-          <em>{match[2]}</em>
-          <span className="text-slate-300">_</span>
-        </span>
-      )
-    }
-    lastIndex = regex.lastIndex
-  }
-
-  if (lastIndex < text.length) {
-    nodes.push(text.slice(lastIndex))
-  }
-
-  return nodes
-}
-
 // Remove os marcadores para contextos de texto puro (meta tags).
 export function stripRichMarkers(text: string): string {
   return text.replace(/\*{2}([^*]+)\*{2}|_([^_]+)_/g, (_m, bold, italic) => bold ?? italic ?? "")
