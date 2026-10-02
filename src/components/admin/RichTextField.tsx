@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useCallback } from "react"
+import { useRef, useCallback, useEffect, useState } from "react"
 import { renderPreviewInline } from "@/lib/rich-text"
 
 const labelCls = "mb-1 block text-xs font-medium text-slate-600"
@@ -9,8 +9,9 @@ const toolbarBtnCls =
   "inline-flex items-center justify-center rounded border border-slate-300 bg-white px-2 py-1 text-xs font-semibold text-slate-600 transition hover:bg-slate-100"
 
 // Fonte/padding idênticos no textarea e no overlay pra ficarem alinhados.
+// px-3.5 py-2.5 dá folga suficiente pra não cortar texto na borda.
 const sharedCls =
-  "w-full min-w-0 rounded-lg border border-slate-300 px-3 py-2 text-sm leading-relaxed whitespace-pre-wrap break-words"
+  "w-full min-w-0 rounded-lg border border-slate-300 px-3.5 py-2.5 text-sm leading-relaxed whitespace-pre-wrap [overflow-wrap:anywhere]"
 
 export function RichTextField({
   label,
@@ -25,6 +26,8 @@ export function RichTextField({
 }) {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const overlayRef = useRef<HTMLDivElement>(null)
+  // Guarda a seleção desejada pra restaurar após re-render.
+  const pendingSelection = useRef<{ start: number; end: number } | null>(null)
 
   // Sincroniza scroll do overlay com o textarea.
   const syncScroll = useCallback(() => {
@@ -36,6 +39,18 @@ export function RichTextField({
     }
   }, [])
 
+  // Restaura a seleção após o re-render causado por onChange.
+  useEffect(() => {
+    if (pendingSelection.current) {
+      const el = textareaRef.current
+      if (el) {
+        el.focus()
+        el.setSelectionRange(pendingSelection.current.start, pendingSelection.current.end)
+      }
+      pendingSelection.current = null
+    }
+  })
+
   const wrapSelection = (before: string, after: string) => {
     const el = textareaRef.current
     if (!el) return
@@ -44,11 +59,9 @@ export function RichTextField({
     const selected = value.slice(start, end)
     const replacement = before + selected + after
     const next = value.slice(0, start) + replacement + value.slice(end)
+    // Guarda a seleção desejada ANTES do onChange causar re-render.
+    pendingSelection.current = { start: start + before.length, end: end + before.length }
     onChange(next)
-    requestAnimationFrame(() => {
-      el.focus()
-      el.setSelectionRange(start + before.length, end + before.length)
-    })
   }
 
   const prefixLines = (prefix: string) => {
@@ -60,11 +73,8 @@ export function RichTextField({
     const lines = selected.split("\n")
     const replacement = lines.map((l) => prefix + l).join("\n")
     const next = value.slice(0, start) + replacement + value.slice(end)
+    pendingSelection.current = { start, end: start + replacement.length }
     onChange(next)
-    requestAnimationFrame(() => {
-      el.focus()
-      el.setSelectionRange(start, start + replacement.length)
-    })
   }
 
   return (
@@ -119,10 +129,12 @@ export function RichTextField({
           {"\n"}
         </div>
 
-        {/* Textarea: captura input, texto invisível, cursor visível */}
+        {/* Textarea: captura input, texto invisível, cursor visível.
+            selection:bg-transparent evita que a seleção do navegador mostre
+            o texto original (com marcadores) por cima do overlay. */}
         <textarea
           ref={textareaRef}
-          className={`${sharedCls} relative resize-y border-slate-300 bg-transparent text-transparent caret-slate-800 focus:border-navy-500 focus:outline-none focus:ring-2 focus:ring-navy-200`}
+          className={`${sharedCls} relative resize-y border-slate-300 bg-transparent text-transparent caret-slate-800 selection:bg-navy-200/40 selection:text-transparent focus:border-navy-500 focus:outline-none focus:ring-2 focus:ring-navy-200`}
           value={value}
           rows={minRows}
           onChange={(e) => onChange(e.target.value)}
