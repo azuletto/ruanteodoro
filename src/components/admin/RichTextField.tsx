@@ -1,15 +1,16 @@
 "use client"
 
-import { useRef } from "react"
-import { renderInline } from "@/lib/rich-text"
-
-const inputCls =
-  "w-full min-w-0 resize-y rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 focus:border-navy-500 focus:outline-none focus:ring-2 focus:ring-navy-200"
+import { useRef, useCallback } from "react"
+import { renderPreviewInline } from "@/lib/rich-text"
 
 const labelCls = "mb-1 block text-xs font-medium text-slate-600"
 
 const toolbarBtnCls =
   "inline-flex items-center justify-center rounded border border-slate-300 bg-white px-2 py-1 text-xs font-semibold text-slate-600 transition hover:bg-slate-100"
+
+// Fonte/padding idênticos no textarea e no overlay pra ficarem alinhados.
+const sharedCls =
+  "w-full min-w-0 rounded-lg border border-slate-300 px-3 py-2 text-sm leading-relaxed whitespace-pre-wrap break-words"
 
 export function RichTextField({
   label,
@@ -22,10 +23,21 @@ export function RichTextField({
   onChange: (v: string) => void
   minRows?: number
 }) {
-  const ref = useRef<HTMLTextAreaElement>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const overlayRef = useRef<HTMLDivElement>(null)
+
+  // Sincroniza scroll do overlay com o textarea.
+  const syncScroll = useCallback(() => {
+    const ta = textareaRef.current
+    const ov = overlayRef.current
+    if (ta && ov) {
+      ov.scrollTop = ta.scrollTop
+      ov.scrollLeft = ta.scrollLeft
+    }
+  }, [])
 
   const wrapSelection = (before: string, after: string) => {
-    const el = ref.current
+    const el = textareaRef.current
     if (!el) return
     const start = el.selectionStart
     const end = el.selectionEnd
@@ -40,7 +52,7 @@ export function RichTextField({
   }
 
   const prefixLines = (prefix: string) => {
-    const el = ref.current
+    const el = textareaRef.current
     if (!el) return
     const start = el.selectionStart
     const end = el.selectionEnd
@@ -70,7 +82,7 @@ export function RichTextField({
         <button
           type="button"
           className={`${toolbarBtnCls} italic`}
-          onClick={() => wrapSelection("*", "*")}
+          onClick={() => wrapSelection("_", "_")}
           aria-label="Itálico"
         >
           I
@@ -92,25 +104,32 @@ export function RichTextField({
           1.
         </button>
       </div>
-      <textarea
-        ref={ref}
-        className={inputCls}
-        value={value}
-        rows={minRows}
-        onChange={(e) => onChange(e.target.value)}
-      />
-      {/* Pré-visualização ao vivo: o mesmo parser usado no site público, então
-          o efeito visto aqui é exatamente o que será publicado. */}
-      {value.trim() !== "" && (
-        <div className="mt-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
-          <p className="mb-1 text-[10px] font-semibold uppercase tracking-wide text-slate-400">
-            Pré-visualização
-          </p>
-          <div className="whitespace-pre-line text-sm leading-relaxed text-slate-800">
-            {renderInline(value)}
-          </div>
+
+      {/* Container relativo: overlay por baixo, textarea transparente por cima */}
+      <div className="relative">
+        {/* Overlay: renderiza o texto formatado (marcadores dim, conteúdo bold/italic) */}
+        <div
+          ref={overlayRef}
+          aria-hidden
+          className={`${sharedCls} pointer-events-none absolute inset-0 overflow-hidden border-transparent bg-white text-slate-800`}
+          style={{ minHeight: `${minRows * 1.625}rem` }}
+        >
+          {renderPreviewInline(value)}
+          {/* Espaço extra pra não cortar a última linha */}
+          {"\n"}
         </div>
-      )}
+
+        {/* Textarea: captura input, texto invisível, cursor visível */}
+        <textarea
+          ref={textareaRef}
+          className={`${sharedCls} relative resize-y border-slate-300 bg-transparent text-transparent caret-slate-800 focus:border-navy-500 focus:outline-none focus:ring-2 focus:ring-navy-200`}
+          value={value}
+          rows={minRows}
+          onChange={(e) => onChange(e.target.value)}
+          onScroll={syncScroll}
+          spellCheck={false}
+        />
+      </div>
     </div>
   )
 }

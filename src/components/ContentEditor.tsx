@@ -24,6 +24,7 @@ import { RichTextField } from "@/components/admin/RichTextField"
 import { PhotoUploader } from "@/components/admin/PhotoUploader"
 import { ArticleImageUploader } from "@/components/admin/ArticleImageUploader"
 import { CustomSelect } from "@/components/admin/CustomSelect"
+import { Toast, type ToastMessage } from "@/components/admin/Toast"
 import type {
   Article,
   HeaderLink,
@@ -227,10 +228,7 @@ export function ContentEditor({
   const [draft, setDraft] = useState<SiteContent>(initialContent)
   const [terms, setTerms] = useState<TermsSection[]>(initialTerms)
   const [isPending, startTransition] = useTransition()
-  const [message, setMessage] = useState<{
-    kind: "success" | "error"
-    text: string
-  } | null>(null)
+  const [message, setMessage] = useState<ToastMessage | null>(null)
   const [showResetModal, setShowResetModal] = useState(false)
   const [showSaveModal, setShowSaveModal] = useState(false)
   const [hoveredSection, setHoveredSection] = useState<string | null>(null)
@@ -486,17 +484,7 @@ export function ContentEditor({
       </header>
 
       <main className="mx-auto max-w-4xl space-y-4 px-4 py-6">
-        {message && (
-          <div
-            className={
-              message.kind === "error"
-                ? "rounded-lg bg-red-50 px-4 py-2.5 text-sm text-red-700"
-                : "rounded-lg bg-emerald-50 px-4 py-2.5 text-sm text-emerald-700"
-            }
-          >
-            {message.text}
-          </div>
-        )}
+        <Toast message={message} onDismiss={() => setMessage(null)} />
 
         <SectionCard title="Configurações Gerais" defaultOpen>
           <div className="space-y-5">
