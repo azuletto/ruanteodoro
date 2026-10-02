@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { getSiteMeta } from "@/lib/content"
 import { getTerms } from "@/lib/terms"
+import { renderInline } from "@/lib/rich-text"
 
 // Título sem o nome no fim: o template do layout já acrescenta "| <nome>".
 export async function generateMetadata(): Promise<Metadata> {
@@ -65,7 +66,7 @@ export default async function TermosPrivacidadePage() {
                   {section.title}
                 </h2>
                 <div className="mt-4 whitespace-pre-line leading-relaxed text-slate-600">
-                  {section.content}
+                  {renderInline(section.content)}
                 </div>
               </section>
             ))}

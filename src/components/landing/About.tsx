@@ -2,6 +2,7 @@ import { Check } from "lucide-react"
 import Image from "next/image"
 import type { SiteContent } from "@/types"
 import { Reveal } from "@/components/landing/Reveal"
+import { renderInline } from "@/lib/rich-text"
 
 export function About({ content }: { content: SiteContent }) {
   return (
@@ -26,7 +27,7 @@ export function About({ content }: { content: SiteContent }) {
             </h2>
             {content.about_bio.split("\n\n").map((paragraph, index) => (
               <p key={index} className="mt-5 leading-relaxed text-navy-200">
-                {paragraph}
+                {renderInline(paragraph)}
               </p>
             ))}
 

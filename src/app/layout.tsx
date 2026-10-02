@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next"
 import { Playfair_Display, Inter, Marcellus } from "next/font/google"
 import "./globals.css"
 import { getSiteMeta } from "@/lib/content"
+import { stripRichMarkers } from "@/lib/rich-text"
 
 const inter = Inter({
   variable: "--font-inter",
@@ -31,7 +32,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
   const siteName = content.footer_name
   const title = content.meta_title
-  const description = content.meta_description
+  const description = stripRichMarkers(content.meta_description)
   const ogImage = content.og_image
 
   return {

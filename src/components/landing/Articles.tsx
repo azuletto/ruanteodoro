@@ -2,6 +2,7 @@ import Image from "next/image"
 import { ExternalLink, BookOpen } from "lucide-react"
 import type { Article, SiteContent } from "@/types"
 import { isSafeUrl } from "@/lib/security"
+import { renderInline } from "@/lib/rich-text"
 
 // Enquadramentos padronizados da imagem do artigo. Todos os cards usam a
 // mesma caixa (altura fixa), o que muda é como a imagem preenche/alinha.
@@ -75,20 +76,20 @@ export function Articles({ content }: { content: SiteContent }) {
                     </div>
 
                     <p className="mt-4 text-sm leading-relaxed text-slate-600">
-                      {article.summary}
+                      {renderInline(article.summary)}
                     </p>
 
                     {/* Conteúdo completo — só aparece se preenchido e diferente do resumo */}
                     {article.content && article.content !== article.summary && (
                       <p className="mt-4 whitespace-pre-line text-sm leading-relaxed text-slate-600">
-                        {article.content}
+                        {renderInline(article.content)}
                       </p>
                     )}
 
                     {/* Referência */}
                     {article.reference && (
                       <p className="mt-4 text-xs leading-relaxed text-slate-400">
-                        {article.reference}
+                        {renderInline(article.reference)}
                         {article.citation ? ` Citação: ${article.citation}.` : ""}
                       </p>
                     )}

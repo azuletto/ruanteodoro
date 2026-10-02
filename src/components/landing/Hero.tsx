@@ -1,6 +1,7 @@
 import { BookOpen } from "lucide-react"
 import type { SiteContent } from "@/types"
 import { isSafeUrl } from "@/lib/security"
+import { renderInline } from "@/lib/rich-text"
 
 export function Hero({ content }: { content: SiteContent }) {
   const ctaHref = isSafeUrl(content.hero_cta_link)
@@ -15,7 +16,7 @@ export function Hero({ content }: { content: SiteContent }) {
             {content.hero_title}
           </h1>
           <p className="mt-6 text-base leading-relaxed text-navy-200 sm:text-lg">
-            {content.hero_subtitle}
+            {renderInline(content.hero_subtitle)}
           </p>
           <a
             href={ctaHref}

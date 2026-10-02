@@ -1,6 +1,7 @@
 "use client"
 
 import { useRef } from "react"
+import { renderInline } from "@/lib/rich-text"
 
 const inputCls =
   "w-full min-w-0 resize-y rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 focus:border-navy-500 focus:outline-none focus:ring-2 focus:ring-navy-200"
@@ -98,6 +99,18 @@ export function RichTextField({
         rows={minRows}
         onChange={(e) => onChange(e.target.value)}
       />
+      {/* Pré-visualização ao vivo: o mesmo parser usado no site público, então
+          o efeito visto aqui é exatamente o que será publicado. */}
+      {value.trim() !== "" && (
+        <div className="mt-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
+          <p className="mb-1 text-[10px] font-semibold uppercase tracking-wide text-slate-400">
+            Pré-visualização
+          </p>
+          <div className="whitespace-pre-line text-sm leading-relaxed text-slate-800">
+            {renderInline(value)}
+          </div>
+        </div>
+      )}
     </div>
   )
 }

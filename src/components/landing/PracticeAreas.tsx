@@ -1,5 +1,6 @@
 import type { SiteContent } from "@/types"
 import { SiteIcon } from "@/lib/icons"
+import { renderInline } from "@/lib/rich-text"
 
 export function PracticeAreas({ content }: { content: SiteContent }) {
   const areas = content.practice_areas
@@ -29,7 +30,7 @@ export function PracticeAreas({ content }: { content: SiteContent }) {
                 {area.title}
               </h3>
               <p className="mt-3 leading-relaxed text-slate-600">
-                {area.description}
+                {renderInline(area.description)}
               </p>
             </article>
           ))}
