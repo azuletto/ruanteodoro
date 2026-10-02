@@ -16,10 +16,10 @@ export function Header({ links }: { links: HeaderLink[] }) {
   return (
     <header className="sticky top-[-1px] z-50 -mb-px pt-[1px] bg-navy-900 shadow-sm shadow-navy-950/20">
       <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-4 sm:px-6">
-        <Link href="/" className="flex items-center" aria-label="Ruan Teodoro Advocacia">
+        <Link href="/" className="flex items-center" aria-label="Ruan Teodoro">
           <Image
             src="/banner.svg"
-            alt="Ruan Teodoro Advocacia"
+            alt="Ruan Teodoro"
             width={180}
             height={48}
             priority

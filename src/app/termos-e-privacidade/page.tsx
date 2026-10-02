@@ -5,7 +5,7 @@ import { getTerms } from "@/app/actions/terms"
 export const metadata: Metadata = {
   title: "Termos de Uso e Política de Privacidade | Ruan Teodoro",
   description:
-    "Termos de uso e política de privacidade do site Ruan Teodoro Advocacia, em conformidade com a LGPD (Lei 13.709/2018).",
+    "Termos de uso e política de privacidade do site Ruan Teodoro, em conformidade com a LGPD (Lei 13.709/2018).",
 }
 
 export default async function TermosPrivacidadePage() {
@@ -37,7 +37,7 @@ export default async function TermosPrivacidadePage() {
             href="/"
             className="font-display text-xl font-semibold text-white transition-colors duration-200 hover:text-navy-200"
           >
-            Ruan Teodoro Advocacia
+            Ruan Teodoro
           </Link>
           <Link
             href="/"
@@ -221,7 +221,7 @@ export default async function TermosPrivacidadePage() {
 
       <footer className="border-t border-navy-100 bg-navy-50">
         <div className="mx-auto max-w-4xl px-4 py-8 text-center text-sm text-slate-500 sm:px-6">
-          Ruan Teodoro Advocacia — OAB/PR 133.807
+          Ruan Teodoro — OAB/PR 133.807
         </div>
       </footer>
     </div>
