@@ -18,6 +18,9 @@ interface ArticleInput {
   active: boolean
 }
 
+// Salvamento atômico via RPC save_articles (migration 004). Delete + insert
+// numa transação só — artigos nunca somem por falha parcial, e desativar um
+// artigo o mantém salvo (o filtro é só de exibição na landing).
 export async function saveArticles(formData: FormData) {
   const supabase = await createSupabaseServerClient()
 
@@ -42,40 +45,14 @@ export async function saveArticles(formData: FormData) {
     return { error: "Dados inválidos." }
   }
 
-  // Limpa a tabela e reinsere — espelha o padrão usado em saveTerms.
-  const { error: deleteError } = await supabase
-    .from("articles")
-    .delete()
-    .neq("id", 0)
-
-  if (deleteError) {
-    return { error: "Falha ao salvar artigos: " + deleteError.message }
+  if (!Array.isArray(articles)) {
+    return { error: "Dados inválidos." }
   }
 
-  if (articles.length > 0) {
-    const rows = articles.map((a, i) => ({
-      title: a.title,
-      summary: a.summary,
-      content: a.content,
-      image_url: a.image_url,
-      image_fit: a.image_fit ?? "cover-center",
-      link_url: a.link_url,
-      reference: a.reference,
-      citation: a.citation,
-      published_in: a.published_in,
-      year: a.year,
-      article_order: i,
-      active: a.active,
-      updated_at: new Date().toISOString(),
-    }))
+  const { error } = await supabase.rpc("save_articles", { articles })
 
-    const { error: insertError } = await supabase
-      .from("articles")
-      .insert(rows)
-
-    if (insertError) {
-      return { error: "Falha ao salvar artigos: " + insertError.message }
-    }
+  if (error) {
+    return { error: "Falha ao salvar artigos: " + error.message }
   }
 
   revalidatePath("/")

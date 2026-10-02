@@ -4,6 +4,7 @@ import { useCallback, useState } from "react"
 import Cropper from "react-easy-crop"
 import type { Area, Point } from "react-easy-crop"
 import { ImagePlus, RotateCcw, User, X } from "lucide-react"
+import { uploadSiteImage } from "@/app/actions/uploads"
 
 type Filters = {
   brightness: number
@@ -113,6 +114,7 @@ export function PhotoUploader({
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS)
   const [cropArea, setCropArea] = useState<Area | null>(null)
   const [processing, setProcessing] = useState(false)
+  const [uploadError, setUploadError] = useState<string | null>(null)
 
   const onFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -124,6 +126,7 @@ export function PhotoUploader({
       setZoom(1)
       setRotation(0)
       setFilters(DEFAULT_FILTERS)
+      setUploadError(null)
     }
     reader.readAsDataURL(file)
     e.target.value = ""
@@ -136,13 +139,37 @@ export function PhotoUploader({
   const setFilter = (key: keyof Filters, v: number) =>
     setFilters((f) => ({ ...f, [key]: v }))
 
+  // Aplica o corte e envia o resultado para o Supabase Storage. O banco
+  // recebe só a URL pública — nada de base64 no Postgres.
   const apply = async () => {
     if (!src || !cropArea) return
     setProcessing(true)
+    setUploadError(null)
     try {
       const dataUrl = await getCroppedImg(src, cropArea, rotation, filters)
-      if (dataUrl) onChange(dataUrl)
-      setSrc(null)
+      if (!dataUrl) {
+        setUploadError("Não foi possível processar a imagem.")
+        return
+      }
+
+      const blob = await (await fetch(dataUrl)).blob()
+      const file = new File([blob], "foto.jpg", { type: "image/jpeg" })
+
+      const fd = new FormData()
+      fd.set("file", file)
+      fd.set("folder", "fotos")
+
+      const result = await uploadSiteImage(fd)
+      if (result.error) {
+        setUploadError(result.error)
+        return
+      }
+      if (result.url) {
+        onChange(result.url)
+        setSrc(null)
+      }
+    } catch {
+      setUploadError("Falha inesperada no upload. Tente novamente.")
     } finally {
       setProcessing(false)
     }
@@ -153,9 +180,10 @@ export function PhotoUploader({
       <div className="flex flex-wrap items-center gap-4">
         <div className="h-20 w-20 shrink-0 overflow-hidden rounded-full border border-slate-200 bg-slate-100">
           {value ? (
+            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={value}
-              alt="Foto do advogado"
+              alt="Foto do pesquisador"
               className="h-full w-full object-cover"
             />
           ) : (
@@ -322,6 +350,12 @@ export function PhotoUploader({
               </label>
             </div>
 
+            {uploadError && (
+              <p className="mx-5 mb-2 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">
+                {uploadError}
+              </p>
+            )}
+
             <div className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 px-5 py-4">
               <button
                 type="button"
@@ -350,7 +384,7 @@ export function PhotoUploader({
                   disabled={processing}
                   className="rounded-lg bg-navy-700 px-4 py-2 text-sm font-medium text-white transition hover:bg-navy-800 disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  {processing ? "Aplicando..." : "Aplicar"}
+                  {processing ? "Enviando..." : "Aplicar"}
                 </button>
               </div>
             </div>

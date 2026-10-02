@@ -7,7 +7,13 @@ import Link from "next/link"
 import type { HeaderLink } from "@/types"
 import { isSafeUrl } from "@/lib/security"
 
-export function Header({ links }: { links: HeaderLink[] }) {
+export function Header({
+  links,
+  siteName,
+}: {
+  links: HeaderLink[]
+  siteName: string
+}) {
   const [open, setOpen] = useState(false)
   const sorted = [...links]
     .filter((l) => isSafeUrl(l.href))
@@ -16,10 +22,10 @@ export function Header({ links }: { links: HeaderLink[] }) {
   return (
     <header className="sticky top-[-1px] z-50 -mb-px pt-[1px] bg-navy-900 shadow-sm shadow-navy-950/20">
       <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-4 sm:px-6">
-        <Link href="/" className="flex items-center" aria-label="Ruan Teodoro">
+        <Link href="/" className="flex items-center" aria-label={siteName}>
           <Image
             src="/banner.svg"
-            alt="Ruan Teodoro"
+            alt={siteName}
             width={180}
             height={48}
             priority
@@ -28,9 +34,9 @@ export function Header({ links }: { links: HeaderLink[] }) {
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex">
-          {sorted.map((link) => (
+          {sorted.map((link, i) => (
             <a
-              key={link.href}
+              key={`${link.href}-${i}`}
               href={link.href}
               className="text-sm font-medium tracking-wide text-white/80 transition-colors duration-200 hover:text-white"
             >
@@ -52,9 +58,9 @@ export function Header({ links }: { links: HeaderLink[] }) {
 
       {open && (
         <nav className="border-t border-white/10 bg-navy-900 md:hidden">
-          {sorted.map((link) => (
+          {sorted.map((link, i) => (
             <a
-              key={link.href}
+              key={`${link.href}-${i}`}
               href={link.href}
               onClick={() => setOpen(false)}
               className="block px-6 py-4 text-sm font-medium text-white/80 transition-colors duration-200 hover:bg-navy-800 hover:text-white"

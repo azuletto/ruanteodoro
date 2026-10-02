@@ -14,28 +14,14 @@ export interface SiteContent {
   practice_subtitle: string
   practice_areas: PracticeArea[]
 
-  differentials_title: string
-  differentials: Differential[]
-
   articles_title: string
   articles: Article[]
 
-  faq_title: string
-  faq_items: FaqItem[]
-
   footer_name: string
   footer_oab: string
-  footer_address: string
-  footer_phone: string
   footer_email: string
-  footer_whatsapp: string
   footer_privacy_url: string
   footer_terms_url: string
-  footer_copyright: string
-
-  whatsapp_number: string
-  email: string
-  phone: string
 
   header_links: HeaderLink[]
   section_order: string[]
@@ -49,15 +35,6 @@ export interface SiteContent {
 }
 
 export interface PracticeArea {
-  id: number
-  icon: string
-  title: string
-  description: string
-  order: number
-  active: boolean
-}
-
-export interface Differential {
   id: number
   icon: string
   title: string
@@ -83,14 +60,6 @@ export interface Article {
 }
 
 export type ArticleImageFit = "cover-center" | "cover-top" | "cover-bottom" | "contain"
-
-export interface FaqItem {
-  id: number
-  question: string
-  answer: string
-  order: number
-  active: boolean
-}
 
 export interface HeaderLink {
   label: string

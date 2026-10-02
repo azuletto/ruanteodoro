@@ -7,15 +7,17 @@ export function About({ content }: { content: SiteContent }) {
   return (
     <section id="sobre" className="scroll-mt-20 bg-navy-900">
       <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-20 sm:px-6 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] md:py-28">
-        <Reveal animation="scale-in" className="mx-auto w-full max-w-sm">
-          <Image
-            src={content.about_photo_url}
-            alt="Advogado Ruan Teodoro"
-            width={400}
-            height={500}
-            className="w-full rounded-lg object-cover shadow-lg"
-          />
-        </Reveal>
+        {content.about_photo_url && (
+          <Reveal animation="scale-in" className="mx-auto w-full max-w-sm">
+            <Image
+              src={content.about_photo_url}
+              alt={`Foto de ${content.footer_name}`}
+              width={400}
+              height={500}
+              className="w-full rounded-lg object-cover shadow-lg"
+            />
+          </Reveal>
+        )}
 
         <Reveal animation="fade-up" delay={150}>
           <div>

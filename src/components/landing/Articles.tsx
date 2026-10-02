@@ -78,6 +78,13 @@ export function Articles({ content }: { content: SiteContent }) {
                       {article.summary}
                     </p>
 
+                    {/* Conteúdo completo — só aparece se preenchido e diferente do resumo */}
+                    {article.content && article.content !== article.summary && (
+                      <p className="mt-4 whitespace-pre-line text-sm leading-relaxed text-slate-600">
+                        {article.content}
+                      </p>
+                    )}
+
                     {/* Referência */}
                     {article.reference && (
                       <p className="mt-4 text-xs leading-relaxed text-slate-400">

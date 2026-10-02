@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation"
 import { createSupabaseServerClient } from "@/lib/supabase/server"
 import { getSiteContent } from "@/lib/content"
-import { getTerms } from "@/app/actions/terms"
+import { getTerms } from "@/lib/terms"
 import { ContentEditor } from "@/components/ContentEditor"
 import { isAdmin } from "@/lib/security"
 

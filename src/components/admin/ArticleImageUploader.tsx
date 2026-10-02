@@ -2,10 +2,11 @@
 
 import { useRef, useState } from "react"
 import { ImagePlus, Trash2 } from "lucide-react"
+import { uploadSiteImage } from "@/app/actions/uploads"
 
 // Uploader de imagem para artigo. Aceita apenas ARQUIVOS de imagem (nunca uma
-// URL de texto), evitando o erro de colar um link de página HTML no lugar de
-// uma imagem. Gera uma data URL armazenada junto com o artigo.
+// URL de texto) e envia para o Supabase Storage — o banco guarda só a URL
+// pública, sem base64 no Postgres.
 export function ArticleImageUploader({
   value,
   onChange,
@@ -14,22 +15,35 @@ export function ArticleImageUploader({
   onChange: (v: string | null) => void
 }) {
   const inputRef = useRef<HTMLInputElement>(null)
-  const [reading, setReading] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const [uploadError, setUploadError] = useState<string | null>(null)
 
-  const onFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     e.target.value = ""
     if (!file) return
-    if (!file.type.startsWith("image/")) return
-
-    setReading(true)
-    const reader = new FileReader()
-    reader.onload = () => {
-      onChange(String(reader.result))
-      setReading(false)
+    if (!file.type.startsWith("image/")) {
+      setUploadError("Apenas imagens são aceitas.")
+      return
     }
-    reader.onerror = () => setReading(false)
-    reader.readAsDataURL(file)
+
+    setUploading(true)
+    setUploadError(null)
+    try {
+      const fd = new FormData()
+      fd.set("file", file)
+      fd.set("folder", "articles")
+      const result = await uploadSiteImage(fd)
+      if (result.error) {
+        setUploadError(result.error)
+      } else if (result.url) {
+        onChange(result.url)
+      }
+    } catch {
+      setUploadError("Falha inesperada no upload. Tente novamente.")
+    } finally {
+      setUploading(false)
+    }
   }
 
   return (
@@ -65,11 +79,11 @@ export function ArticleImageUploader({
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
-          disabled={reading}
+          disabled={uploading}
           className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:border-navy-400 hover:text-navy-700 disabled:opacity-60"
         >
           <ImagePlus className="h-4 w-4" />
-          {reading ? "Carregando..." : value ? "Trocar imagem" : "Enviar imagem"}
+          {uploading ? "Enviando..." : value ? "Trocar imagem" : "Enviar imagem"}
         </button>
         {value && (
           <button
@@ -81,9 +95,14 @@ export function ArticleImageUploader({
             Remover imagem
           </button>
         )}
+        {uploadError && (
+          <span className="text-[11px] leading-tight text-red-600">
+            {uploadError}
+          </span>
+        )}
         <span className="text-[11px] leading-tight text-slate-400">
-          Use um arquivo de imagem (PNG, JPG, WebP). O enquadramento é ajustado
-          abaixo.
+          Use um arquivo de imagem (PNG, JPG, WebP, máx. 8MB). O enquadramento
+          é ajustado abaixo.
         </span>
       </div>
 

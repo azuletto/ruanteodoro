@@ -20,7 +20,7 @@ export default async function Home() {
 
   return (
     <>
-      <Header links={content.header_links} />
+      <Header links={content.header_links} siteName={content.footer_name} />
       <main>
         <Hero content={content} />
         {content.section_order.map((key, i) =>

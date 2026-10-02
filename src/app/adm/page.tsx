@@ -1,8 +1,10 @@
 import { redirect } from "next/navigation"
 import { createSupabaseServerClient } from "@/lib/supabase/server"
+import { getSiteMeta } from "@/lib/content"
 import { LoginForm } from "@/components/admin/LoginForm"
 
-export const metadata = { title: "Admin | Ruan Teodoro" }
+// Título curto: o template do layout acrescenta "| <nome>" dinamicamente.
+export const metadata = { title: "Admin" }
 
 export default async function AdminPage({
   searchParams,
@@ -18,7 +20,7 @@ export default async function AdminPage({
     redirect("/adm/dashboard")
   }
 
-  const { erro } = await searchParams
+  const [{ erro }, content] = await Promise.all([searchParams, getSiteMeta()])
 
   return (
     <div className="scroll-dark relative flex min-h-screen items-center justify-center overflow-hidden bg-navy-950 px-4 py-16">
@@ -42,7 +44,7 @@ export default async function AdminPage({
         </div>
 
         <p className="mt-6 text-center text-xs text-navy-300/70">
-          © {new Date().getFullYear()} Ruan Teodoro · Acesso restrito
+          © {new Date().getFullYear()} {content.footer_name} · Acesso restrito
         </p>
       </div>
     </div>

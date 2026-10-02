@@ -4,6 +4,9 @@ import { revalidatePath } from "next/cache"
 import { createSupabaseServerClient } from "@/lib/supabase/server"
 import { isAdmin } from "@/lib/security"
 
+// Salvamento atômico via RPC save_terms (migration 004): o delete + insert +
+// versionamento rodam numa única transação no banco. Se qualquer passo
+// falhar, nada é aplicado — a tabela nunca fica vazia por falha parcial.
 export async function saveTerms(formData: FormData) {
   const supabase = await createSupabaseServerClient()
 
@@ -21,60 +24,32 @@ export async function saveTerms(formData: FormData) {
 
   const raw = String(formData.get("sections") ?? "")
 
-  let sections: { title: string; content: string }[]
+  let parsed: { title: string; content: string }[]
   try {
-    sections = JSON.parse(raw)
+    parsed = JSON.parse(raw)
   } catch {
     return { error: "Dados inválidos." }
   }
 
-  const { error: deleteError } = await supabase
-    .from("terms_sections")
-    .delete()
-    .neq("id", 0)
-
-  if (deleteError) {
-    return { error: "Falha ao salvar: " + deleteError.message }
+  if (!Array.isArray(parsed)) {
+    return { error: "Dados inválidos." }
   }
 
-  if (sections.length > 0) {
-    const rows = sections.map((s, i) => ({
-      title: s.title,
-      content: s.content,
-      section_order: i,
-      updated_at: new Date().toISOString(),
-    }))
+  const sections = parsed.map((s) => ({
+    title: String(s?.title ?? ""),
+    content: String(s?.content ?? ""),
+  }))
 
-    const { error: insertError } = await supabase
-      .from("terms_sections")
-      .insert(rows)
-
-    if (insertError) {
-      return { error: "Falha ao salvar: " + insertError.message }
-    }
-  }
-
-  await supabase.from("terms_versions").insert({
-    sections_snapshot: sections,
+  const { error } = await supabase.rpc("save_terms", {
+    sections,
     changed_by: user.id,
   })
+
+  if (error) {
+    return { error: "Falha ao salvar termos: " + error.message }
+  }
 
   revalidatePath("/")
   revalidatePath("/termos-e-privacidade")
   return { success: true }
-}
-
-export async function getTerms() {
-  const supabase = await createSupabaseServerClient()
-
-  const { data, error } = await supabase
-    .from("terms_sections")
-    .select("*")
-    .order("section_order", { ascending: true })
-
-  if (error || !data) {
-    return []
-  }
-
-  return data
 }

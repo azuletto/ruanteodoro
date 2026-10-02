@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next"
 import { Playfair_Display, Inter, Marcellus } from "next/font/google"
 import "./globals.css"
+import { getSiteMeta } from "@/lib/content"
 
 const inter = Inter({
   variable: "--font-inter",
@@ -21,99 +22,100 @@ const marcellus = Marcellus({
 })
 
 const SITE_URL = "https://ruanteodoro.vercel.app"
-const SITE_NAME = "Ruan Teodoro"
-const SITE_TITLE = "Ruan Teodoro | Pesquisa em Direito e Tecnologia"
-const SITE_DESCRIPTION =
-  "Pesquisa acadêmica em Direito Digital, Proteção de Dados e Direito do Consumidor. Publicações sobre LGPD, perfilamento, publicidade direcionada e direitos fundamentais no ambiente digital."
 
-export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
-  title: {
-    default: SITE_TITLE,
-    template: "%s | Ruan Teodoro",
-  },
-  description: SITE_DESCRIPTION,
-  keywords: [
-    "Direito Digital",
-    "Proteção de Dados",
-    "LGPD",
-    "Direito do Consumidor",
-    "Perfilamento",
-    "Publicidade Direcionada",
-    "Direitos Fundamentais",
-    "Pesquisa Acadêmica",
-    "Ruan Teodoro",
-  ],
-  authors: [{ name: "Ruan Teodoro" }],
-  creator: "Ruan Teodoro",
-  publisher: "Ruan Teodoro",
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: { index: true, follow: true },
-  },
-  alternates: {
-    canonical: SITE_URL,
-  },
-  openGraph: {
-    title: SITE_TITLE,
-    description: SITE_DESCRIPTION,
-    type: "website",
-    locale: "pt_BR",
-    siteName: SITE_NAME,
-    url: SITE_URL,
-    images: [
-      {
-        url: "/banner.png",
-        width: 2000,
-        height: 2000,
-        alt: SITE_TITLE,
-      },
+// Metadados dinâmicos: title/description/OG vêm do conteúdo editável no
+// admin (meta_title, meta_description, og_image, footer_name). Nada aqui é
+// hardcoded — o que for salvo no painel reflete no <head>.
+export async function generateMetadata(): Promise<Metadata> {
+  const content = await getSiteMeta()
+
+  const siteName = content.footer_name
+  const title = content.meta_title
+  const description = content.meta_description
+  const ogImage = content.og_image
+
+  return {
+    metadataBase: new URL(SITE_URL),
+    title: {
+      default: title,
+      template: `%s | ${siteName}`,
+    },
+    description,
+    keywords: [
+      "Direito Digital",
+      "Proteção de Dados",
+      "LGPD",
+      "Direito do Consumidor",
+      "Perfilamento",
+      "Publicidade Direcionada",
+      "Direitos Fundamentais",
+      "Pesquisa Acadêmica",
+      siteName,
     ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: SITE_TITLE,
-    description: SITE_DESCRIPTION,
-    images: ["/banner.png"],
-  },
-  icons: {
-    icon: [
-      { url: "/icons/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-      { url: "/icons/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-      { url: "/icons/favicon.ico", sizes: "48x48" },
-    ],
-    apple: [
-      {
-        url: "/icons/apple-touch-icon.png",
-        sizes: "180x180",
-        type: "image/png",
-      },
-    ],
-    other: [
-      {
-        rel: "android-icon",
-        url: "/icons/android-chrome-192x192.png",
-        sizes: "192x192",
-        type: "image/png",
-      },
-      {
-        rel: "android-icon",
-        url: "/icons/android-chrome-512x512.png",
-        sizes: "512x512",
-        type: "image/png",
-      },
-    ],
-  },
-  manifest: "/icons/site.webmanifest",
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "black-translucent",
-    title: SITE_NAME,
-  },
-  formatDetection: {
-    telephone: false,
-  },
+    authors: [{ name: siteName }],
+    creator: siteName,
+    publisher: siteName,
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: { index: true, follow: true },
+    },
+    alternates: {
+      canonical: SITE_URL,
+    },
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      locale: "pt_BR",
+      siteName,
+      url: SITE_URL,
+      images: ogImage ? [{ url: ogImage, alt: title }] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ogImage ? [ogImage] : undefined,
+    },
+    icons: {
+      icon: [
+        { url: "/icons/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+        { url: "/icons/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+        { url: "/icons/favicon.ico", sizes: "48x48" },
+      ],
+      apple: [
+        {
+          url: "/icons/apple-touch-icon.png",
+          sizes: "180x180",
+          type: "image/png",
+        },
+      ],
+      other: [
+        {
+          rel: "android-icon",
+          url: "/icons/android-chrome-192x192.png",
+          sizes: "192x192",
+          type: "image/png",
+        },
+        {
+          rel: "android-icon",
+          url: "/icons/android-chrome-512x512.png",
+          sizes: "512x512",
+          type: "image/png",
+        },
+      ],
+    },
+    manifest: "/icons/site.webmanifest",
+    appleWebApp: {
+      capable: true,
+      statusBarStyle: "black-translucent",
+      title: siteName,
+    },
+    formatDetection: {
+      telephone: false,
+    },
+  }
 }
 
 export const viewport: Viewport = {

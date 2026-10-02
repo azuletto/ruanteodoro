@@ -26,8 +26,6 @@ import { ArticleImageUploader } from "@/components/admin/ArticleImageUploader"
 import { CustomSelect } from "@/components/admin/CustomSelect"
 import type {
   Article,
-  Differential,
-  FaqItem,
   HeaderLink,
   PracticeArea,
   SiteContent,
@@ -271,19 +269,14 @@ export function ContentEditor({
       const result = await saveContent(formData)
       const termsResult = await saveTerms(termsFormData)
       const articlesResult = await saveArticles(articlesFormData)
-      if (
-        (result && "error" in result) ||
-        (termsResult && "error" in termsResult) ||
-        (articlesResult && "error" in articlesResult)
-      ) {
-        setMessage({
-          kind: "error",
-          text:
-            (result && "error" in result ? result.error : undefined) ??
-            (termsResult && "error" in termsResult ? termsResult.error : undefined) ??
-            (articlesResult && "error" in articlesResult ? articlesResult.error : undefined) ??
-            "Erro ao salvar",
-        })
+      const errors: string[] = []
+      if (result && "error" in result && result.error) errors.push(result.error)
+      if (termsResult && "error" in termsResult && termsResult.error)
+        errors.push(termsResult.error)
+      if (articlesResult && "error" in articlesResult && articlesResult.error)
+        errors.push(articlesResult.error)
+      if (errors.length > 0) {
+        setMessage({ kind: "error", text: errors.join(" · ") })
       } else {
         setMessage({ kind: "success", text: "Conteúdo salvo com sucesso." })
       }
@@ -336,42 +329,6 @@ export function ContentEditor({
       draft.practice_areas.filter((_, idx) => idx !== i)
     )
 
-  const updateDifferential = (i: number, patch: Partial<Differential>) =>
-    set(
-      "differentials",
-      draft.differentials.map((d, idx) =>
-        idx === i ? { ...d, ...patch } : d
-      )
-    )
-
-  const moveDifferential = (i: number, dir: -1 | 1) =>
-    set(
-      "differentials",
-      moveItem(draft.differentials, i, dir).map((d, idx) => ({
-        ...d,
-        order: idx,
-      }))
-    )
-
-  const addDifferential = () =>
-    set("differentials", [
-      ...draft.differentials,
-      {
-        id: Date.now(),
-        icon: AVAILABLE_ICONS[0],
-        title: "",
-        description: "",
-        order: draft.differentials.length,
-        active: true,
-      },
-    ])
-
-  const removeDifferential = (i: number) =>
-    set(
-      "differentials",
-      draft.differentials.filter((_, idx) => idx !== i)
-    )
-
   const updateArticle = (i: number, patch: Partial<Article>) =>
     set(
       "articles",
@@ -411,39 +368,6 @@ export function ContentEditor({
     set(
       "articles",
       draft.articles.filter((_, idx) => idx !== i)
-    )
-
-  const updateFaq = (i: number, patch: Partial<FaqItem>) =>
-    set(
-      "faq_items",
-      draft.faq_items.map((f, idx) => (idx === i ? { ...f, ...patch } : f))
-    )
-
-  const moveFaq = (i: number, dir: -1 | 1) =>
-    set(
-      "faq_items",
-      moveItem(draft.faq_items, i, dir).map((f, idx) => ({
-        ...f,
-        order: idx,
-      }))
-    )
-
-  const addFaq = () =>
-    set("faq_items", [
-      ...draft.faq_items,
-      {
-        id: Date.now(),
-        question: "",
-        answer: "",
-        order: draft.faq_items.length,
-        active: true,
-      },
-    ])
-
-  const removeFaq = (i: number) =>
-    set(
-      "faq_items",
-      draft.faq_items.filter((_, idx) => idx !== i)
     )
 
   const updateLink = (i: number, patch: Partial<HeaderLink>) =>
@@ -890,9 +814,11 @@ export function ContentEditor({
             </div>
           </PreviewBox>
           <div className="grid gap-3">
-            <p className="text-xs text-slate-500">
-              Título da seção: <span className="font-medium text-slate-700">{draft.articles_title}</span>
-            </p>
+            <Field
+              label="Título da seção"
+              value={draft.articles_title}
+              onChange={(v) => set("articles_title", v)}
+            />
             <div className="space-y-3">
               {draft.articles.map((item, i) => (
                 <div
@@ -988,6 +914,14 @@ export function ContentEditor({
                   </div>
                   <div className="mt-2">
                     <RichTextField
+                      label="Conteúdo completo (opcional — se vazio, só o resumo aparece)"
+                      value={item.content}
+                      onChange={(v) => updateArticle(i, { content: v })}
+                      minRows={4}
+                    />
+                  </div>
+                  <div className="mt-2">
+                    <RichTextField
                       label="Referência completa"
                       value={item.reference}
                       onChange={(v) => updateArticle(i, { reference: v })}
@@ -1012,21 +946,6 @@ export function ContentEditor({
               <Plus className="h-4 w-4" />
               Adicionar artigo
             </button>
-          </div>
-        </SectionCard>
-
-        <SectionCard title="Contato">
-          <PreviewBox>
-            <div className="grid h-12 grid-cols-1 gap-1.5">
-              <div className="rounded-md bg-slate-200" />
-            </div>
-          </PreviewBox>
-          <div className="grid gap-3">
-            <Field
-              label="E-mail"
-              value={draft.email}
-              onChange={(v) => set("email", v)}
-            />
           </div>
         </SectionCard>
 
@@ -1064,13 +983,6 @@ export function ContentEditor({
               value={draft.footer_terms_url}
               onChange={(v) => set("footer_terms_url", v)}
             />
-            <div className="sm:col-span-2">
-              <Field
-                label="Copyright"
-                value={draft.footer_copyright}
-                onChange={(v) => set("footer_copyright", v)}
-              />
-            </div>
           </div>
         </SectionCard>
 

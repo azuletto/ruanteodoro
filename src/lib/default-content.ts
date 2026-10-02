@@ -57,27 +57,15 @@ export const defaultContent: SiteContent = {
       active: true,
     },
   ],
-  differentials_title: "Diferenciais",
-  differentials: [],
   articles_title: "Publicações e Pesquisas",
   // Sem fallback: artigos vêm exclusivamente do banco. A lista padrão é vazia
   // para que nenhuma pesquisa inventada apareça no site.
   articles: [],
-  faq_title: "",
-  faq_items: [],
   footer_name: "Ruan Teodoro",
   footer_oab: "OAB/PR 133807",
-  footer_address: "Pesquisa acadêmica em Direito e Tecnologia",
-  footer_phone: "",
   footer_email: "contato@ruanteodoro.adv.br",
-  footer_whatsapp: "",
   footer_privacy_url: "/termos-e-privacidade",
   footer_terms_url: "/termos-e-privacidade",
-  footer_copyright:
-    "© 2026 Ruan Teodoro. Todos os direitos reservados.",
-  whatsapp_number: "",
-  email: "contato@ruanteodoro.adv.br",
-  phone: "",
   header_links: [
     { label: "Pesquisas", href: "#areas", order: 1 },
     { label: "Sobre", href: "#sobre", order: 2 },
