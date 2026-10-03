@@ -430,9 +430,6 @@ export function ContentEditor({
       <header className="sticky top-0 z-40 border-b border-white/10 bg-navy-900 shadow-md shadow-navy-950/30">
         <div className="mx-auto flex max-w-4xl flex-col gap-3 px-4 py-3 sm:px-6 md:flex-row md:items-center md:justify-between">
           <div className="flex min-w-0 items-center gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-sm font-bold text-white">
-              {(userEmail[0] ?? "A").toUpperCase()}
-            </div>
             <div className="min-w-0">
               <h1 className="truncate text-sm font-semibold text-white sm:text-base">
                 Painel Administrativo
